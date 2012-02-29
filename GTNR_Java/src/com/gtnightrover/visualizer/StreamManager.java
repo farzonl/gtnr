@@ -16,11 +16,13 @@ public class StreamManager extends Thread {
 	@Override
 	public void run() {
 		int count = 0;
-		while (ps.hasPoints()) {
-			g.clear();
-			g.addAll(ps.getPoints());
-			gw.repaint();
-			System.out.println("Update: " + (count++));
+		while (true) {
+			if (ps.hasPoints()) {
+				g.clear();
+				g.addAll(ps.getPoints());
+				gw.repaint();
+				System.out.println("Update: " + (count++));
+			}
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
@@ -28,7 +30,7 @@ public class StreamManager extends Thread {
 				e.printStackTrace();
 			}
 		}
-		System.exit(0);
+		//System.exit(0);
 	}
 	
 	/**

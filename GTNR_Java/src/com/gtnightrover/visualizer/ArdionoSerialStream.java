@@ -9,18 +9,25 @@ import java.util.Scanner;
 public class ArdionoSerialStream implements PointsStream {
 
 	private List<String> lines;
-	private Scanner serialStream;
+	private File streamFileName;
 
 	public ArdionoSerialStream(String usbPort) throws FileNotFoundException {
 		lines = new ArrayList<String>();
 		File f = new File(usbPort);
-		serialStream = new Scanner(f);
+		if (!f.exists())
+			throw new FileNotFoundException();
 	}
 
 	@Override
 	public boolean hasPoints() {
-		while (serialStream.hasNextLine())
-			lines.add(serialStream.nextLine());
+		Scanner serialStream = null;
+		try {
+			serialStream = new Scanner(streamFileName);
+			while (serialStream.hasNextLine())
+				lines.add(serialStream.nextLine());
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 		return lines.size() > 0;
 	}
 
@@ -41,6 +48,7 @@ public class ArdionoSerialStream implements PointsStream {
 					}
 				}
 			}
+			lines.clear();
 			return arr;
 		}
 		return null;

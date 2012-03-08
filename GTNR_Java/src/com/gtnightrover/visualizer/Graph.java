@@ -132,7 +132,7 @@ public class Graph {
 	}
 	
 	public void clear() {
-		this.points = new LinkedList<Point>();
+		this.points.clear();
 	}
 	
 	public List<Point> getPixelPoints() {

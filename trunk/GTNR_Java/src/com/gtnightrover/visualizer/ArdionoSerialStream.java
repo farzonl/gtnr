@@ -1,32 +1,30 @@
 package com.gtnightrover.visualizer;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+
+import com.gtnightrover.serial.SerialComm;
 
 public class ArdionoSerialStream implements PointsStream {
 
 	private List<String> lines;
-	private File streamFileName;
+	private SerialComm serialStream;
 
-	public ArdionoSerialStream(String usbPort) throws FileNotFoundException {
+	public ArdionoSerialStream(String usbPort, int speed) throws Exception {
 		lines = new ArrayList<String>();
-		File f = new File(usbPort);
-		if (!f.exists())
-			throw new FileNotFoundException();
+		serialStream = new SerialComm(usbPort, speed);
 	}
 
 	@Override
 	public boolean hasPoints() {
-		Scanner serialStream = null;
-		try {
-			serialStream = new Scanner(streamFileName);
-			while (serialStream.hasNextLine())
-				lines.add(serialStream.nextLine());
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+		String curr = "";
+		long time = System.currentTimeMillis();
+		long lapse = System.currentTimeMillis() - time;
+		while (lapse < 100 && !curr.equals("Distances")) {
+			if (serialStream.hasNextLine()) {
+				curr = serialStream.getNextLine();
+				lines.add(curr);
+			}
 		}
 		return lines.size() > 0;
 	}

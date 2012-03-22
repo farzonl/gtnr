@@ -121,6 +121,31 @@ public class SerialComm {
 			System.out.println("Port was null...");
 		}
 	}
+	
+	public static void readPort3(String portName, int speed)
+		throws Exception {
+			System.out.println("Using port: " + portName);
+			CommPortIdentifier portId = CommPortIdentifier
+				.getPortIdentifier(portName);
+
+			SerialPort port = (SerialPort) portId.open("serial talk", 4000);
+
+			if (port != null) {
+				Scanner input = new Scanner(port.getInputStream());
+				port.setSerialPortParams(speed, SerialPort.DATABITS_8,
+				SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+				//long time = System.currentTimeMillis();
+				//long lapse = System.currentTimeMillis() - time;
+				while (input.hasNext()) {
+					if (input.hasNextLine())
+						System.out.println((input.nextLine()));
+					//lapse = System.currentTimeMillis() - time;
+				}
+				port.close();
+			} else {
+				System.out.println("Port was null...");
+			}
+	}
 
 	public static void listPorts() {
 		@SuppressWarnings("unchecked")
@@ -135,6 +160,11 @@ public class SerialComm {
 
 	public static void main(String[] args) throws Exception {
 		listPorts();
-		readPort2("/dev/ttyACM0", 115200, 8000);
+		//readPort2("/dev/ttyACM0", 115200, 8000);
+		//readPort2("/dev/ttyACM0", 9600, 2000);
+		//readPort2("/dev/ttyUSB0", 9600, 2000);
+		 readPort3("/dev/ttyACM0", 9600);
+		//readPort3("/dev/ttyUSB0", 9600);
 	}
+	
 }

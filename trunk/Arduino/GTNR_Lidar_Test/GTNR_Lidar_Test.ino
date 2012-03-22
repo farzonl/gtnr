@@ -2,6 +2,17 @@ int count = 0;
 
 /**
  * ===========================================================
+ *  Custom Definitions
+ * ===========================================================
+ */
+#define FWD 1
+#define BKD 2
+#define RHT 3
+#define LFT 4
+#define STOP 0
+ 
+/**
+ * ===========================================================
  *  DFRduino Key Variables
  * ===========================================================
  */
@@ -19,6 +30,9 @@ int autopilot = 1;
  *  DFRduino Motor Variables
  * ===========================================================
  */
+
+int currDirection = 0;
+int currSpeed = 0;
 
 //Standard PWM DC control
 int E1 = 5;     //M1 Speed Control
@@ -40,7 +54,9 @@ void setup(void)
   Serial.begin(115200);      //Set Baud Rate
 
   pinMode(13, OUTPUT);
-  advance(255,255);  
+  go(FWD);
+  delay(500);
+  go(STOP);
 } 
 
 
@@ -80,30 +96,37 @@ void loop()
         case 0 : 
           { 
             if (!autopilot) {
-              advance(255,255);
+              //advance(255,255);
+              go(FWD);
             }
           } 
           break;
         case 1 : 
           { 
             if (!autopilot) {
-              turn_L (255,255);
+              //turn_L (255,255);
               //advance(255,150);
+              go(LFT);
             }
           } 
           break;
         case 2 : 
           { 
             if (!autopilot) {
-              back_off (255,255);   //move back in max speed
+              //back_off (255,255);   //move back in max speed
+              if (currDirection == BKD)
+                go(BKD);
+              else
+                go(STOP);
             }
           } 
           break;
         case 3 : 
           { 
             if (!autopilot) {
-              turn_R(255,255);
+              //turn_R(255,255);
               //advance(150,255);
+              go(RHT);
             }
           } 
           break;
@@ -188,5 +211,21 @@ void turn_R (char a,char b)             //Turn Right
   digitalWrite(M2,LOW);
 }
 
-
+void go(int dir) {
+  if (dir == currDirection) {
+    double temp = 255 - currSpeed;
+    temp += temp*0.3;
+    currSpeed = (int)temp;
+  } else {
+    currSpeed = 127;
+    currDirection = dir;
+  }
+  switch(dir) {
+   case FWD: advance(currSpeed, currSpeed); break;
+   case BKD: back_off (currSpeed, currSpeed); break;
+   case LFT: turn_L(currSpeed, currSpeed); break;
+   case RHT: turn_R(currSpeed, currSpeed); break; 
+   case STOP: advance(0,0); break;
+  }
+}
 

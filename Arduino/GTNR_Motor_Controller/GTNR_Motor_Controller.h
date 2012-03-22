@@ -7,9 +7,9 @@
  * ===========================================================
  */
 #define FWD  0
-#define BKD  1
-#define RHT  2
-#define LFT  3
+#define LFT  1
+#define BKD  2
+#define RHT  3
 #define AUT  4
 #define STOP 5
 
@@ -59,7 +59,10 @@ void turn_R (char a,char b);
  * ===========================================================
  */
 void handle_encoder(int side);
-int readIR(int side);
+void handle_ir(void);
+int ir_to_cm(int analog);
+double ir_to_voltage(int analog);
+void handle_photocells(void);
 
 
 #endif

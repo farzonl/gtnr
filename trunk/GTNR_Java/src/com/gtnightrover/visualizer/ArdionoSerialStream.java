@@ -24,6 +24,7 @@ public class ArdionoSerialStream implements PointsStream {
 			if (serialStream.hasNextLine()) {
 				curr = serialStream.getNextLine();
 				lines.add(curr);
+				System.out.println(curr);
 			}
 		}
 		return lines.size() > 0;

@@ -1,11 +1,18 @@
 package com.gtnightrover.visualizer;
 
 import java.awt.Point;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Graph {
 
+	private boolean FILE_DUMP = false;
+	private String DUMP_DIR = "/home/david/Desktop/Lidar_Dump/";
+	
 	private int width, height;
 	private int minX, minY, maxX, maxY;
 	private List<Point> points;
@@ -31,9 +38,9 @@ public class Graph {
 		if (p == null)
 			return false;
 		if (p.x < minX || p.x >= maxX)
-			return false;
+			p.x = maxX;
 		if (p.y < minY || p.y >= maxY)
-			return false;
+			p.y = maxY;
 		return true;
 	}
 	
@@ -41,9 +48,9 @@ public class Graph {
 		if (p == null)
 			return false;
 		if (p.x < 0 || p.x >= width)
-			return false;
+			p.x = width;
 		if (p.y < 0 || p.y >= height)
-			return false;
+			p.y = height;
 		return true;
 	}
 	
@@ -68,11 +75,12 @@ public class Graph {
 	public Point toPixel(double degree, double distance) {
 		if (distance < 0)
 			return null;
-		double x = distance * Math.cos(degree);
-		double y = distance * Math.sin(degree);
-		x = x / (maxX - minX);
-		y = y / (maxY - minY);
-		return new Point((int)(x*width)+(width>>1), (int)(y*height)+(height>>1));
+		double y = -distance * Math.cos(degree);
+		double x = -distance * Math.sin(degree);
+		x = x / (double)(maxX);
+		y = y / (double)(maxY);
+		Point p = new Point((int)(x*width)+(width>>1), (int)(y*height)+(height>>1));
+		return p;
 	}
 	
 	public DoublePoint toEuclidian(Point p) {
@@ -131,6 +139,29 @@ public class Graph {
 				points.add(toPixel(pts[i][0], pts[i][1]));
 	}
 	
+	public void addAll(int[] pts) {
+		BufferedWriter bw = null;
+		if (FILE_DUMP)
+			try {
+				bw = new BufferedWriter(new FileWriter(new File(DUMP_DIR+System.currentTimeMillis()+".txt")));
+			} catch (IOException e) { e.printStackTrace(); }
+		if (pts == null)
+			return;
+		for (int i=0;i<pts.length;i++) {
+			double rad = (double)i*2*Math.PI / 360;
+			points.add(toPixel(rad, pts[i]));
+			if (bw != null)
+				try {
+					bw.append(pts[i]+"\n");
+				} catch (IOException e) { }
+//			System.out.println(i + "=" + rad + " --> " + pts[i]);
+		}
+		if (bw != null)
+			try {
+				bw.close();
+			} catch (IOException e) { }
+	}
+	
 	public void clear() {
 		this.points.clear();
 	}
@@ -138,7 +169,8 @@ public class Graph {
 	public List<Point> getPixelPoints() {
 		List<Point> rtn = new LinkedList<Point>();
 		for (Point p : points)
-			rtn.add(new Point(p.x, p.y));
+			if (p != null)
+				rtn.add(new Point(p.x, p.y));
 		return rtn;
 	}
 	

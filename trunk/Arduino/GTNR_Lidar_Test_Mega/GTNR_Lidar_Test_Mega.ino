@@ -35,7 +35,7 @@ void loop() {
       Serial.println(counts[i], DEC);
     }
     */
-    //Serial.println("Distance:");
+    Serial.println("Distances");
     for(i=0;i<360;i++) {
       Serial.print(i, DEC);
       Serial.print("\t");

@@ -2,10 +2,10 @@
 #include "GTNR_Motor_Controller.h"
 #include <Encoder.h>
 
-#define DEBUG_SPEED       0
+#define DEBUG_SPEED       1
 #define DEBUG_DISTANCE    0
 #define DEBUG_PHOTOCELLS  0
-#define DEBUG_IR          1
+#define DEBUG_IR          0
 
 #define NUM_PHOTOCELLS    4
 #define NUM_IR            2
@@ -53,11 +53,11 @@ void setup(void)
 
 void loop() 
 {
-  //handle_key();
-  //handle_encoder(3);
-  //handle_photocells();
+  handle_key();
+  handle_encoder(3);
+  handle_photocells();
   handle_ir();
-  delay(250);
+  //delay(250);
   
   // blink alive
   digitalWrite(13, alive);

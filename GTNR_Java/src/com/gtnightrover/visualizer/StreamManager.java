@@ -1,30 +1,34 @@
 package com.gtnightrover.visualizer;
 
+import com.gtnightrover.lidar.LidarSerialStream;
+
 public class StreamManager extends Thread {
 
 	private Graph g;
 	private GraphWindow gw;
-	private PointsStream ps;
+	private LidarSerialStream lss;
 	
-	public StreamManager(Graph g, GraphWindow gw, PointsStream ps) {
+	public StreamManager(Graph g, GraphWindow gw, LidarSerialStream lss) {
 		super();
 		this.g = g;
 		this.gw = gw;
-		this.ps = ps;
+		this.lss = lss;
 	}
 	
 	@Override
 	public void run() {
 		int count = 0;
 		while (true) {
-			if (ps.hasPoints()) {
+			try {
 				g.clear();
-				g.addAll(ps.getPoints());
+				g.addAll(lss.getDistances());
 				gw.repaint();
-				System.out.println("Update: " + (count++));
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
 			try {
-				Thread.sleep(500);
+				Thread.sleep(100);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -40,7 +44,7 @@ public class StreamManager extends Thread {
 		Graph g = new Graph(800,600,-20000,-20000,20000,20000);
 		GraphWindow f = new GraphWindow(800, 600, g);
 		f.setVisible(true);
-		new StreamManager(g, f, new StreamGen()).start();
+//		new StreamManager(g, f, new StreamGen()).start();
 	}
 	
 	public static class StreamGen implements PointsStream {

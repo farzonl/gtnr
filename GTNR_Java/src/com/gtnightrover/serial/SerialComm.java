@@ -25,6 +25,14 @@ public class SerialComm {
 				SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
 	}
 	
+	public boolean hasNextByte() {
+		return input.hasNextByte();
+	}
+	
+	public Byte nextByte() {
+		return input.nextByte();
+	}
+	
 	public boolean hasNext() {
 		return input.hasNext();
 	}

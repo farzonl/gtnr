@@ -1,0 +1,28 @@
+To compile the projects you need to move "./Libraries/Encoder/" into the 
+libraries folder in the Arduino program libraries folder (namely 
+"path_to_arduino libraries/").
+
+The following projects are included in the repository to include the 
+following functionality:
+
+GTNR_Battery_Controller**:
+	- Controls onboard power and power sensing. 
+	- Communicates with Atom board about onboard statistics.
+	- Drives Lidar rotation motor
+
+GTNR_Lidar_Test:
+	- Testing for lidar communication
+
+GTNR_Lidar_Test_Mega**:
+	- Reads lidar data and communicates with the atom board. 
+
+GTNR_Lidar_Test_Mega2:
+	- Origional lidar data test with debugging code.
+
+GTNR_Motor_Controller**:
+	- Used to drive the motors
+	- Detects light intensity
+	- Detects IR distance
+
+LidarSerialGen:
+	- Used to simulate lidar readings for Java code debugging

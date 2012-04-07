@@ -31,7 +31,7 @@ public class Main {
 							int input_int = Integer.parseInt(input_str);
 							if(degree != depth_arr.length)
 							{
-								depth_arr[degree] = input_int*10;
+								depth_arr[degree] = input_int*50;
 								degree++;
 							}
 							else break;

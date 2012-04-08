@@ -5,6 +5,7 @@ import gnu.io.SerialPort;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Scanner;
 
@@ -164,6 +165,19 @@ public class SerialComm {
 				System.out.println(port.getName());
 			}
 		}
+	}
+	
+	public static ArrayList<String> listPorts2() {
+		@SuppressWarnings("unchecked")
+		Enumeration<CommPortIdentifier> ports = CommPortIdentifier.getPortIdentifiers();
+		ArrayList<String> ret_arr_list = new ArrayList<String>() ;
+		while (ports.hasMoreElements()) {
+			CommPortIdentifier port = ports.nextElement();
+			if (port.getPortType() == CommPortIdentifier.PORT_SERIAL) {
+				ret_arr_list.add(port.getName());
+			}
+		}
+		return ret_arr_list;
 	}
 
 	public static void main(String[] args) throws Exception {

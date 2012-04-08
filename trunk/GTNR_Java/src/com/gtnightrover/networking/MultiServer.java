@@ -4,8 +4,18 @@ import java.lang.reflect.Method;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.io.*;
+
+import com.gtnightrover.Graph.PathBuilder;
+import com.gtnightrover.serial.RunableSerialThread;
+import com.gtnightrover.serial.SerialComm;
 public class MultiServer {
+	
+	static int[] depth_arr = new int[360];
+	public static ArrayList<Integer> send_depth_arr = null;
+	
     public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = null;
         boolean listening = true;
@@ -16,11 +26,26 @@ public class MultiServer {
             System.err.println("Could not listen on port: 4444.");
             System.exit(-1);
         }
-
+        
+        
+        ArrayList<String> comm_posts = SerialComm.listPorts2();
+        if(null == comm_posts || comm_posts.isEmpty() || 
+        		comm_posts.get(0) == null  || comm_posts.get(0) == "")
+        {
+        	send_depth_arr = sendDepth();
+        	System.out.println("No serial ports available");
+        }
+        else
+        {
+        	System.out.println(comm_posts.toString());
+        	RunableSerialThread.executorService.submit(new RunableSerialThread("/dev/ttyACM0", 9600, depth_arr));
+        }
+		
         while (listening)
         	new MultiServerThread(serverSocket.accept()).start();
 
         serverSocket.close();
+        RunableSerialThread.executorService.shutdown();
     }
     
     public static String[] setEmail(String[] recv)

@@ -49,36 +49,6 @@ public class Main {
 		PathBuilder path = null;
 		int[] depth_arr = new int[360];
 		
-		/*Thread depth_update = new Thread()
-		{
-			private PathBuilder path;
-			private int[] depth_arr;
-			
-			public void define(PathBuilder path, int[] depth_arr)
-			{
-				this.path = path;
-				this.depth_arr = depth_arr;
-			}
-			public void run()
-			{
-				try
-				{
-					readPort("/dev/ttyACM0", 9600, depth_arr);
-				} 
-				catch(InterruptedException e) 
-				{
-					e.printStackTrace();
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				finally 
-				{
-					path = new PathBuilder(depth_arr);
-				}
-			}
-		};
-		depth_update.start();*/
 		
 		try {
 			readPort("/dev/ttyACM0", 9600, depth_arr);

@@ -38,6 +38,8 @@ public class MultiServer {
         else
         {
         	System.out.println(comm_posts.toString());
+          //LidarSerialStream stream = new LidarSerialStream("/dev/ttyACM0",115200).start();
+          //stream.getDistances();
         	RunableSerialThread.executorService.submit(new RunableSerialThread("/dev/ttyACM0", 9600, depth_arr));
         }
 		

@@ -9,12 +9,15 @@ import java.util.concurrent.Executors;
 import java.io.*;
 
 import com.gtnightrover.Graph.PathBuilder;
+import com.gtnightrover.lidar.LidarSerialStream;
 import com.gtnightrover.serial.RunableSerialThread;
 import com.gtnightrover.serial.SerialComm;
 public class MultiServer {
 	
 	static int[] depth_arr = new int[360];
 	public static ArrayList<Integer> send_depth_arr = null;
+	public static LidarSerialStream stream = null;
+	public static boolean isSerial;
 	
     public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = null;
@@ -34,13 +37,22 @@ public class MultiServer {
         {
         	send_depth_arr = sendDepth();
         	System.out.println("No serial ports available");
+        	isSerial = false;
         }
         else
         {
         	System.out.println(comm_posts.toString());
-          //LidarSerialStream stream = new LidarSerialStream("/dev/ttyACM0",115200).start();
-          //stream.getDistances();
-        	RunableSerialThread.executorService.submit(new RunableSerialThread("/dev/ttyACM0", 9600, depth_arr));
+             
+			try {
+				stream = new LidarSerialStream("/dev/ttyACM0",115200);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+             stream.start();
+          //stream.getDistances();sendDepth
+        	//RunableSerialThread.executorService.submit(new RunableSerialThread("/dev/ttyACM0", 9600, depth_arr));
+             isSerial = true;
         }
 		
         while (listening)
@@ -62,6 +74,17 @@ public class MultiServer {
 	
 		return Arrays.asList(args.toArray()).toArray(new String[args.size()]);
     	
+    }
+    
+    public static ArrayList<Integer>  sendDepth(int[] anArray)
+    {
+    	ArrayList<Integer> depth_arr = new ArrayList<Integer>();
+    	for(int i = 0; i < 360;i++)
+    	{
+    		//depth_arr[i] = (int) (Math.random() * 200)+50;
+    		depth_arr.add(anArray[i]);
+    	}
+    	return depth_arr;
     }
     
     public static ArrayList<Integer>  sendDepth()

@@ -5,8 +5,8 @@
 #define BODY  0
 #define ATOM  1
 #define BATT  2
-#define BODY_Pin      3
-#define ATOM_Pin     4
+#define BODY_Pin  3
+#define ATOM_Pin  4
 #define BATT_Pin  5
 
 #define GTNR_5V      0

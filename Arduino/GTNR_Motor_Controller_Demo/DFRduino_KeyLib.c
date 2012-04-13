@@ -28,7 +28,7 @@ int convert_key(unsigned int input);
  *  DFRduino Key Method Implementations
  * ===========================================================
  */
-/*
+
 int get_key_press() {
   int keyPinVal = analogRead(KEYPIN);
   int key = -1;
@@ -58,6 +58,6 @@ int convert_key(unsigned int input)
     return -1;     // No valid key pressed
   return k;
 }
-/**/
+
 
 #endif

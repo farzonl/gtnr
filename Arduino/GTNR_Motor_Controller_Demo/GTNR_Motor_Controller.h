@@ -3,6 +3,21 @@
 
 /**
  * ===========================================================
+ *  Custom Keywords
+ * ===========================================================
+ */
+#define FWD  0
+#define LFT  1
+#define BKD  2
+#define RHT  3
+#define AUT  4
+#define STOP 5
+
+
+
+
+/**
+ * ===========================================================
  *  DFRduino Motor Variables
  * ===========================================================
  */
@@ -30,6 +45,7 @@ int MAX_SPEED = 255;
  *  Motor Controller Methods
  * ===========================================================
  */
+void handle_key();
 void go(int dir);
 void halt(void);
 void advance(char a,char b);

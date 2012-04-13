@@ -1,10 +1,8 @@
-#include <GTNR.h>
-
 #include "DFRduino_KeyLib.c"
 #include "GTNR_Motor_Controller.h"
 #include <Encoder.h>
 
-#define DEBUG_SPEED       0
+#define DEBUG_SPEED       1
 #define DEBUG_DISTANCE    0
 #define DEBUG_PHOTOCELLS  0
 #define DEBUG_IR          0
@@ -23,10 +21,15 @@ double last = 0;
 double photocells[NUM_PHOTOCELLS];
 double irs[NUM_IR];
 
-int startSpeed = 75;
+int startSpeed = 200;
 
 char alive = 0;
 char keyDown = 0;
+
+int demo_left = 8;
+int demo_down = 9;
+int demo_up = 10;
+int demo_right = 11;
 
 /**
  * ===========================================================
@@ -37,11 +40,14 @@ void setup(void)
 { 
   int i;
   for(i=4;i<=7;i++)
-    pinMode(i, OUTPUT);
-
-  Serial.begin(115200);      //Set Baud Rate
+    pinMode(i, OUTPUT);  
+  Serial
+  .begin(115200);      //Set Baud Rate
 
   pinMode(13, OUTPUT);
+  go(FWD);
+  delay(500);
+  go(STOP);
 } 
 
 
@@ -53,15 +59,30 @@ void setup(void)
 
 void loop() 
 {
-  handle_key();
-  handle_encoder(3);
-  handle_photocells();
   handle_ir();
-  //delay(250);
+  if(digitalRead(demo_down) && currDirection != BKD) {
+    Serial.println("Down");
+    go(BKD);
+  } else if(digitalRead(demo_up) && currDirection != FWD) {
+    Serial.println("Up");
+    go(FWD);
+  } else if(digitalRead(demo_left) && currDirection != LFT) {
+    Serial.println("Left");
+    go(LFT);
+  } else if(digitalRead(demo_right) && currDirection != RHT) {
+    Serial.println("Right");
+    go(RHT);
+  }
+  if (!(digitalRead(demo_down) | digitalRead(demo_up)|digitalRead(demo_left)|digitalRead(demo_right))) {
+    Serial.println("Stop");
+    go(STOP);
+  }
   
   // blink alive
   digitalWrite(13, alive);
   alive = !alive;
+  
+  delay(250);
 }
 
 
@@ -115,10 +136,6 @@ void go(int dir) {
     currSpeed = startSpeed;
     currDirection = dir;
   }
-  if (DEBUG_SPEED) {
-    Serial.print("currSpeed: ");
-    Serial.println(currSpeed, DEC);
-  }
   // Stop if needed other wise advance as needed
   if (dir == STOP || dir < 0) {
     halt();
@@ -133,7 +150,7 @@ void go(int dir) {
     case LFT : 
       turn_L(currSpeed,currSpeed); 
       break;
-    case REV : 
+    case BKD : 
       back_off(currSpeed); 
       break;
     case RHT : 

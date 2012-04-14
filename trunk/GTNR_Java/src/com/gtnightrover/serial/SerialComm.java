@@ -1,6 +1,8 @@
 package com.gtnightrover.serial;
 
 import gnu.io.CommPortIdentifier;
+import gnu.io.NoSuchPortException;
+import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
 
 import java.io.IOException;
@@ -14,6 +16,7 @@ public class SerialComm {
 	Scanner input;
 	OutputStreamWriter output;
 	SerialPort port;
+	
 
 	public SerialComm(String portName, int speed) throws Exception {
 		CommPortIdentifier portId = CommPortIdentifier
@@ -178,6 +181,36 @@ public class SerialComm {
 			}
 		}
 		return ret_arr_list;
+	}
+	
+	public static void write(byte[] data, String portName, int speed) throws Exception
+	{
+		CommPortIdentifier portId = CommPortIdentifier.getPortIdentifier(portName);
+
+		SerialPort port = (SerialPort) portId.open("serial talk", 4000);
+
+		if (port != null) {
+			java.io.OutputStream output = port.getOutputStream();
+			port.setSerialPortParams(speed, 
+				       SerialPort.DATABITS_8, 
+				       SerialPort.STOPBITS_1, 
+				       SerialPort.PARITY_NONE);
+			output.write(data);
+		}
+		port.close();
+	}
+	
+	public static void write(byte[] data, SerialPort port, int speed) throws Exception
+	{
+
+		if (port != null) {
+			java.io.OutputStream output = port.getOutputStream();
+			port.setSerialPortParams(speed, 
+				       SerialPort.DATABITS_8, 
+				       SerialPort.STOPBITS_1, 
+				       SerialPort.PARITY_NONE);
+			output.write(data);
+		}
 	}
 
 	public static void main(String[] args) throws Exception {

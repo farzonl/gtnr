@@ -68,14 +68,56 @@ public class MultiServer {
     	args.add("gtnr@gtnr.org");
     	args.add(recv[0]);
     	//this will need to call terminal eventually
-    	args.add("test email");
+    	///args.add("test email");
+    	
+    	String cmd = "";
+    	if(recv[0].equals("CPU Perf"))
+    			cmd = cmdRun("mpstat");
+    	
+    	else if(recv[0].equals("CPU Temp"))
+    		cmd = cmdRun("sensors");
+    		
+    	else
+    		cmd = "CPU Perf\n"+cmdRun("mpstat")+"\nCPU Temp\n"+cmdRun("mpstat");
+    	
+    	args.add(cmd);
+    	
     	for(int i = 1; i < recv.length;i++) args.add(recv[i]);
     	args.trimToSize();
 	
 		return Arrays.asList(args.toArray()).toArray(new String[args.size()]);
     	
     }
-    
+    public static String cmdRun(String cmd)
+    {    	
+    	Runtime run = Runtime.getRuntime();
+		Process pr = null;
+		try {
+			pr = run.exec(cmd);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String retStr ="";
+		try {
+			pr.waitFor();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		BufferedReader buf = new BufferedReader(new InputStreamReader(pr.getInputStream()));
+		String line = "";
+		try {
+			while ((line=buf.readLine())!=null) {
+				System.out.println(line);
+				retStr += line+"\n";
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return retStr;		
+    }
     public static ArrayList<Integer>  sendDepth(int[] anArray)
     {
     	ArrayList<Integer> depth_arr = new ArrayList<Integer>();

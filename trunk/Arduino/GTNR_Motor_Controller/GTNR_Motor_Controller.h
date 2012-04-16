@@ -19,18 +19,14 @@ int M2 = 7;    //M1 Direction Control
  *  Other Variables
  * ===========================================================
  */
-int count = 0;
-int currSpeed = 0;
 int currDirection = 0;
-int autopilot = 1;
-int MAX_SPEED = 255;
 
 /**
  * ===========================================================
  *  Motor Controller Methods
  * ===========================================================
  */
-void go(int dir);
+void go(GTNR_Com *com);
 void halt(void);
 void advance(char a,char b);
 void back_off (char a,char b);

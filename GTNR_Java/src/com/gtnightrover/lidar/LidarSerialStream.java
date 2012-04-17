@@ -5,13 +5,16 @@ import gnu.io.SerialPort;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
+import java.io.OutputStream;
 
 public class LidarSerialStream extends Thread {
 
 	private InputStream serialStream;
+	private OutputStream outStream;
 	private int[] distances;
 	private final boolean DEBUG = false;
+	private long lastTime = System.currentTimeMillis();
+	private byte[] currSpeed = new byte[2];
 
 	public LidarSerialStream(String usbPort, int speed) throws Exception {
 		super(usbPort + ":" + speed);
@@ -20,6 +23,7 @@ public class LidarSerialStream extends Thread {
 
 		SerialPort port = (SerialPort) portId.open("serial talk", 4000);
 		serialStream = port.getInputStream();
+		outStream = port.getOutputStream();
 		port.setSerialPortParams(speed, SerialPort.DATABITS_8,
 				SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
 		distances = new int[360];
@@ -29,6 +33,16 @@ public class LidarSerialStream extends Thread {
 		int[] arr = new int[distances.length];
 		synchronized (distances) {
 			System.arraycopy(distances, 0, arr, 0, distances.length);
+		}
+		return arr;
+	}
+	
+	public byte[] getCurrSpeed() {
+		byte[] arr = new byte[3];
+		arr[0] = (byte)'s';
+		synchronized (currSpeed) {
+			arr[1] = currSpeed[0];
+			arr[2] = currSpeed[1];
 		}
 		return arr;
 	}
@@ -61,8 +75,13 @@ public class LidarSerialStream extends Thread {
 		if (arr[1] < 0xA0 || arr[1] > 0xF9)
 			return null;
 		for (int i = 2; i < arr.length; i++)
-			arr[i] = serialStream.read();
+			arr[i] = readHelper();
 		return arr;
+	}
+	
+	private int readHelper() throws IOException {
+		while(serialStream.available() <= 0);
+		return serialStream.read();
 	}
 
 	private void outputDump(int[] arr) throws IOException {
@@ -83,8 +102,9 @@ public class LidarSerialStream extends Thread {
 		int addr = arr[1];
 		synchronized (distances) {
 			for (int i = 0; i < 4; i++) {
-				Distance dist = extractDistance(arr[((i + 1) * 4) + i],
-						arr[((i + 1) * 4) + i + 1]);
+				
+				Distance dist = extractDistance(arr[(i * 4) + 4],
+						arr[(i * 4) + 5]);
 				distances[((addr - 0xA0) * 4) + i] = (dist.error == 0) ? dist.dist : 0;
 				if (DEBUG)
 					System.out.print((addr - 0xA0) + "+" + i + ":\t" + dist
@@ -92,6 +112,16 @@ public class LidarSerialStream extends Thread {
 			}
 			if (DEBUG)
 				System.out.println();
+		}
+		// 4A:00 and is happy between around 49:D0 to 4A:2F
+		synchronized (currSpeed) {
+			currSpeed[0] = (byte)arr[3];
+			currSpeed[1] = (byte)arr[4];
+		}
+		long temp = System.currentTimeMillis();
+		if (temp - lastTime > 200) {
+			lastTime = temp;
+			System.out.println(Integer.toHexString(arr[3]) + ":" + Integer.toHexString(arr[4]));
 		}
 	}
 
@@ -106,6 +136,23 @@ public class LidarSerialStream extends Thread {
 		return dist;
 	}
 	
+	public boolean write(int i) {
+		try {
+			outStream.write(i);
+			return true;
+		} catch (IOException e) { }
+		return false;
+	}
+	
+	public boolean write(byte[] barr) {
+		if (barr != null)
+			try {
+				outStream.write(barr);
+				return true;
+			} catch (IOException e) { }
+		return false;
+	}
+	
 	private static class Distance {
 		public int dist;
 		public int error;
@@ -117,10 +164,5 @@ public class LidarSerialStream extends Thread {
 		public String toString(){
 			return dist+"";
 		}
-	}
-
-	public static void main(String[] args) throws Exception {
-		LidarSerialStream lss = new LidarSerialStream("/dev/ttyACM0", 115200);
-		lss.start();
 	}
 }

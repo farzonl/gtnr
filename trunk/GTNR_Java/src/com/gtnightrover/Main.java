@@ -20,7 +20,7 @@ public class Main {
 //		new StreamManager(g, f, new ArdionoSerialStream("/dev/ttyACM0", 115200)).start();
 		LidarSerialStream lss = new LidarSerialStream("/dev/ttyACM0", 115200);
 		lss.start();
-		LidarComm dfr = new LidarComm("/dev/ttyUSB1", 9600);
+		LidarComm dfr = new LidarComm("/dev/ttyUSB0", 9600);
 		System.out.println("Lidar Serial Stream Started");
 		new StreamManager(g, f, lss, dfr).start();
 	}

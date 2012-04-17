@@ -15,6 +15,7 @@ public class LidarSerialStream extends Thread {
 	private final boolean DEBUG = false;
 	private long lastTime = System.currentTimeMillis();
 	private byte[] currSpeed = new byte[2];
+	private LidarComm driver;
 
 	public LidarSerialStream(String usbPort, int speed) throws Exception {
 		super(usbPort + ":" + speed);
@@ -27,6 +28,20 @@ public class LidarSerialStream extends Thread {
 		port.setSerialPortParams(speed, SerialPort.DATABITS_8,
 				SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
 		distances = new int[360];
+	}
+
+	public LidarSerialStream(String usbPort, int speed, LidarComm driver) throws Exception {
+		super(usbPort + ":" + speed);
+		CommPortIdentifier portId = CommPortIdentifier
+				.getPortIdentifier(usbPort);
+
+		SerialPort port = (SerialPort) portId.open("serial talk", 4000);
+		serialStream = port.getInputStream();
+		outStream = port.getOutputStream();
+		port.setSerialPortParams(speed, SerialPort.DATABITS_8,
+				SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+		distances = new int[360];
+		this.driver = driver;
 	}
 
 	public int[] getDistances() {
@@ -50,6 +65,7 @@ public class LidarSerialStream extends Thread {
 	@Override
 	public void run() {
 		int curr = 0x00;
+		long lastTime = System.currentTimeMillis();
 		while (true) {
 			try {
 				if (serialStream.available() > 0) {
@@ -64,6 +80,13 @@ public class LidarSerialStream extends Thread {
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
+			}
+			// Automatically take care of speed controller if one exists.
+			// TODO: implement with correct protocol.
+			if (System.currentTimeMillis() - lastTime > 100) {
+				lastTime = System.currentTimeMillis();
+				if (driver != null)
+					driver.write(getCurrSpeed());
 			}
 		}
 	}

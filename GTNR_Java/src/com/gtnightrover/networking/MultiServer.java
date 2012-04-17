@@ -8,10 +8,17 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.io.*;
 
+import javax.swing.JFrame;
+
+import com.gtnightrover.Graph.GraphPanel2;
 import com.gtnightrover.Graph.PathBuilder;
+import com.gtnightrover.Graph.PathDrawer;
 import com.gtnightrover.lidar.LidarSerialStream;
 import com.gtnightrover.serial.RunableSerialThread;
 import com.gtnightrover.serial.SerialComm;
+import com.gtnightrover.visualizer.Graph;
+import com.gtnightrover.visualizer.GraphWindow;
+import com.gtnightrover.visualizer.StreamManager;
 public class MultiServer {
 	
 	static int[] depth_arr = new int[360];
@@ -20,7 +27,19 @@ public class MultiServer {
 	public static boolean isSerial;
 	
     public static void main(String[] args) throws IOException {
-        ServerSocket serverSocket = null;
+        
+    	/*for demo only*/
+    	Graph g = new Graph(800,600,-12000,-12000,12000,12000);
+		GraphWindow f = new GraphWindow(800, 600, g);
+		f.setVisible(true);
+		
+		//GraphWindow f2 = new GraphWindow(800, 600, new GraphPanel2(g));
+		//f2.setVisible(true);
+		
+		
+		/*for demo only*/
+		
+    	ServerSocket serverSocket = null;
         boolean listening = true;
         System.out.println("Server Running");
         try {
@@ -54,6 +73,11 @@ public class MultiServer {
         	//RunableSerialThread.executorService.submit(new RunableSerialThread("/dev/ttyACM0", 9600, depth_arr));
              isSerial = true;
         }
+        /*for demo only*/
+        System.out.println("Lidar Serial Stream Started");
+		new StreamManager(g, f, stream).start();
+		//new StreamManager(g, f2, stream).start();
+        /*for demo only*/
 		
         while (listening)
         	new MultiServerThread(serverSocket.accept()).start();

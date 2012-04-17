@@ -73,13 +73,15 @@
  *    10 - 
  *    11 - 
  *    12 - 
- *    13 - 
+ *    13 - Status LED
  *    A0 - Current 5V
  *    A1 - Current 12V
  *    A2 - Current Motors
  *    A3 - Termperature Body
  *    A4 - Termperature Atom Board
  *    A5 - Termperature Battery
+ *    A6 - 
+ *    A7 - 
  */
 #include "GTNR_Battery_Controller.h"
 #include <GTNR.h>
@@ -95,12 +97,17 @@ unsigned int list_size = 0;
 double current_vals[3];
 double temperature_vals[3];
 
+// Lidar Driver Variables
+int curr_speed = 0;
+int max_speed = 175;
+int comm_engaged = 0;
+
 void setup() {
   Serial.begin(9600);  
 
   // Start Lidar Motor
-  analogWrite (5,255);      //PWM Speed Control
   digitalWrite(4,LOW);
+  analogWrite (5, max_speed);
 
   delay_time = 1000 / resolution;
 }
@@ -150,6 +157,9 @@ void handle_list() {
     case REQ : 
       send_current_info(com);
       break;
+    case SPD : 
+      handle_lidar_speed(com);
+      break;
     case LOG : 
       break;
     case OFF : // TODO: implement with mosfets?
@@ -177,6 +187,21 @@ void send_current_info(GTNR_Com *com) {
     Serial.write(current_vals[i]);
   for(int i=0;i< 3;i++)
     Serial.write(temperature_vals[i]);
+}
+
+/* Takes a command of the form:
+ *    { sync, 's', [spdH, spdL], BatCon }
+ * Specifically, command => 's'peed, data contains lidar rotational speed data,
+ * data2 contains BatteryController serial address.
+ */
+void handle_lidar_speed(GTNR_Com *com) {
+  comm_engaged = 1;
+  if(com->data < 0x4900 && curr_speed < max_speed)
+    ++curr_speed;
+  else if (com->data > 0x4A00 && curr_speed > 0)
+    --curr_speed;
+  if (temp != 0x49)
+    analogWrite(5, curr_speed);
 }
 
 /* Read the each current value, convert 10 bit analog to mA, smooth

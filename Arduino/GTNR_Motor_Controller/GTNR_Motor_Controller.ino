@@ -73,13 +73,15 @@
  *    10 - Left Encoder A
  *    11 - Left Encoder B
  *    12 - 
- *    13 - 
+ *    13 - Status LED
  *    A0 - Photocell0
  *    A1 - Photocell1
  *    A2 - Photocell2
  *    A3 - Photocell3
  *    A4 - IR0
  *    A5 - IR1
+ *    A6 - 
+ *    A7 - 
  */
 
 #include <GTNR.h>

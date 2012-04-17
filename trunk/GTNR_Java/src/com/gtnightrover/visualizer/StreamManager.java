@@ -1,5 +1,6 @@
 package com.gtnightrover.visualizer;
 
+import com.gtnightrover.lidar.LidarComm;
 import com.gtnightrover.lidar.LidarSerialStream;
 
 public class StreamManager extends Thread {
@@ -7,12 +8,21 @@ public class StreamManager extends Thread {
 	private Graph g;
 	private GraphWindow gw;
 	private LidarSerialStream lss;
+	private LidarComm dfr;
 	
 	public StreamManager(Graph g, GraphWindow gw, LidarSerialStream lss) {
 		super();
 		this.g = g;
 		this.gw = gw;
 		this.lss = lss;
+	}
+	
+	public StreamManager(Graph g, GraphWindow gw, LidarSerialStream lss, LidarComm dfr) {
+		super();
+		this.g = g;
+		this.gw = gw;
+		this.lss = lss;
+		this.dfr = dfr;
 	}
 	
 	@Override
@@ -23,6 +33,8 @@ public class StreamManager extends Thread {
 				g.clear();
 				g.addAll(lss.getDistances());
 				gw.repaint();
+				if (dfr != null)
+					dfr.write(lss.getCurrSpeed());
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

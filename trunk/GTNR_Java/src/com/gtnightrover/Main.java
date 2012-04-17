@@ -1,5 +1,6 @@
 package com.gtnightrover;
 
+import com.gtnightrover.lidar.LidarComm;
 import com.gtnightrover.lidar.LidarSerialStream;
 import com.gtnightrover.visualizer.Graph;
 import com.gtnightrover.visualizer.GraphWindow;
@@ -19,8 +20,9 @@ public class Main {
 //		new StreamManager(g, f, new ArdionoSerialStream("/dev/ttyACM0", 115200)).start();
 		LidarSerialStream lss = new LidarSerialStream("/dev/ttyACM0", 115200);
 		lss.start();
+		LidarComm dfr = new LidarComm("/dev/ttyUSB1", 9600);
 		System.out.println("Lidar Serial Stream Started");
-		new StreamManager(g, f, lss).start();
+		new StreamManager(g, f, lss, dfr).start();
 	}
 
 }

@@ -49,8 +49,8 @@ public class MultiServerThread extends Thread
 					{
 						if(sendList != null && sendList.size() == 360) 
 						{
-							System.out.println(Arrays.toString(MultiServer.send_depth_arr.toArray()));
-							outStream.writeObject(MultiServer.send_depth_arr);
+							System.out.println(Arrays.toString(sendList.toArray()));
+							outStream.writeObject(sendList);
 							break;
 						}
 					}

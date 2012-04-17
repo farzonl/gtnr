@@ -5,6 +5,8 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 
+import com.gtnightrover.Graph.GraphPanel2;
+
 public class GraphWindow extends JFrame {
 
 	/**
@@ -17,6 +19,18 @@ public class GraphWindow extends JFrame {
 		setSize(width, height); // default size is 0,0
 		setLocation(10, 200); // default is 0,0 (top left corner)
 		getContentPane().add(new GraphPanel(g));
+		addWindowListener(new WindowAdapter() {
+		  	public void windowClosing(WindowEvent e) {
+			   System.exit(0);
+		  	}
+		} );
+	}
+	
+	public GraphWindow(int width, int height,GraphPanel2 gp) {
+		setTitle("My Empty Frame");
+		setSize(width, height); // default size is 0,0
+		setLocation(10, 200); // default is 0,0 (top left corner)
+		getContentPane().add(gp);
 		addWindowListener(new WindowAdapter() {
 		  	public void windowClosing(WindowEvent e) {
 			   System.exit(0);

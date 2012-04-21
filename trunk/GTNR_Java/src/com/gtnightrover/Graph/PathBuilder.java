@@ -1,8 +1,11 @@
 package com.gtnightrover.Graph;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 import javax.swing.JFrame;
+
+import com.gtnightrover.serial.SerialWriteRunner;
 
 
 
@@ -22,11 +25,12 @@ public class PathBuilder
 	private ArrayList<Vertex> depth_pos;
 	private ArrayList<Point> points;
 	private AdjacencyListGraph graph;
-	private int[] gDistance = {0,0,0};
+	private int[] gDistance = {0,0};
+	private int[] weighted_depth;
 	public PathBuilder(int[] depth_arr)
 	{
 		this.depth_arr = depth_arr;
-		
+		this.weighted_depth = depth_arr.clone();
 		//initialize
 		graph = new AdjacencyListGraph();
 		points = new ArrayList<Point>(depth_arr.length);
@@ -38,17 +42,17 @@ public class PathBuilder
 		//set data
 		for(int i = 0; i < depth_arr.length;i++)
 		{	
-			//TODO make this into logic with weight, right new path picking algorithm that takes this into account.
-			if(depth_arr[i] > gDistance[1])
+			if(i>0 && i <= 90) 
 			{
-				gDistance[1] = depth_arr[i];
-				gDistance[0] = i;
-				if(i>0 && i <= 90) gDistance[2] = depth_arr[i]+i;
-				else if(i>90 && i <= 180) gDistance[2] = depth_arr[i]+90-i;
-				else
-					gDistance[2] = 0;
+				weighted_depth[i]+=i;
+				if(i>45 && i <= 90) weighted_depth[i]+=i;
 			}
-			
+			else if(i>90 && i <= 180) 
+			{
+				weighted_depth[i]+=90-i;
+				if(i>90 && i <= 135) weighted_depth[i]+=90-i;
+			}
+
 			Point newPoint = construct_point(depth_arr[i],i);
 			System.out.println("degree: "+i+"\t"+newPoint.toString());
 			points.add(newPoint);
@@ -78,7 +82,22 @@ public class PathBuilder
 		return new Vertex(point.toString()+"Depth: "+depth);
 	}
 	
-	
+	public ArrayList<Vertex> weighted_path()
+	{
+		ArrayList<Vertex> path = new ArrayList<Vertex>();
+		path.add(robo_pos);
+		for(int i = 0; i < weighted_depth.length; i++)
+		{
+			if(weighted_depth[i] >gDistance[1])
+			{
+				gDistance[0] = i;
+				gDistance[1] = weighted_depth[i];
+			}
+		}
+		path.add(depth_pos.get(gDistance[0]));
+		return path;
+		
+	}
 	
 	public AdjacencyListGraph getGraph() {
 		return graph;
@@ -120,6 +139,17 @@ public class PathBuilder
 		this.points = points;
 	}
 	
+	public static ArrayList<Point> fromVtoP(ArrayList<Vertex> V)
+	{
+		ArrayList<Point> P = new ArrayList<Point>();
+		for(int i = 0; i < V.size(); i ++)
+		{
+			P.add((Point) V.get(i).getData());
+		}
+		
+		return P;
+	}
+	
 	public static void main(String[] args) 
 	{
 		PathBuilder path = null;
@@ -141,11 +171,20 @@ public class PathBuilder
 		
 		
 		//ArrayList<Vertex> dfs = path.getGraph().dfs(path.getRobo_pos(),path.getDepth_pos().get(path.getgDistance()[0]));
-		ArrayList<Vertex>   spanning_tree = (ArrayList<Vertex>) path.getGraph().getShortestPathTo(path.getDepth_pos().get(path.getgDistance()[0]));
+		
+		
+		//ArrayList<Vertex>   spanning_tree = (ArrayList<Vertex>) path.getGraph().getShortestPathTo(path.getDepth_pos().get(path.getgDistance()[0]));
+		ArrayList<Vertex>   wPath = path.weighted_path();
+		SerialWriteRunner.convert(fromVtoP(wPath),(byte)-1,(byte)0);
+		
+		//So I am generating a byte array here you will need to use convert_write(). I have not tested with an arduino yet
+		ArrayList<byte[]> write_list = SerialWriteRunner.convert(fromVtoP(wPath),(byte)-1,(byte)0);
+		for(int i = 0; i < write_list.size(); i++) System.out.println(" "+Arrays.toString(write_list.get(i)));
+		
 		
 		JFrame f = new JFrame("Path");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.getContentPane().add( new PathDrawer(path.getRobo_pos(),spanning_tree));
+		f.getContentPane().add( new PathDrawer(path.getRobo_pos(),wPath));
 		f.pack(); 
 		f.setVisible(true);
 	}

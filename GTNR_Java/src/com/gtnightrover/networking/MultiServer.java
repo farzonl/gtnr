@@ -12,7 +12,7 @@ import javax.swing.JFrame;
 
 import com.gtnightrover.Graph.GraphPanel2;
 import com.gtnightrover.Graph.PathBuilder;
-import com.gtnightrover.Graph.PathDrawer;
+import com.gtnightrover.Graph.PathDrawer2;
 import com.gtnightrover.lidar.LidarSerialStream;
 import com.gtnightrover.serial.RunableSerialThread;
 import com.gtnightrover.serial.SerialComm;

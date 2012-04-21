@@ -38,25 +38,27 @@ public class GraphPanel2 extends JPanel {
 	public void expand_edges(Graphics img)
 	{
 		java.util.List<Point> points = graph.getPixelPoints();
-		Point robo_pos = new Point(0,0);
+		Point robo_pos = new Point(400,300);
 		for (int i = 0; i < graph.getPixelPoints().size()-1;i++)
 		{
-			draw_line(img,robo_pos, 
-					(Point)points.get(i),randomColor());
+			if(null != points.get(i))
+			{
+				draw_line(img,robo_pos, 
+						(Point)points.get(i),randomColor());
 			
 			
-			draw_line(img,points.get(i), 
-					points.get(i+1),randomColor());
+				draw_line(img,points.get(i), 
+						points.get(i+1),randomColor());
 			
 			//System.out.println(depth_pos.get(i).getData().toString());
-			
+			}
 		}
 	}
 	
 	public void  draw_line(Graphics img, Point p1, Point p2, Color c1)
 	{
 		img.setColor(c1);
-		img.drawLine((int)p1.getX()+400,(int)p1.getY()+400,(int)p2.getX()+400,(int)p2.getY()+400);
+		img.drawLine((int)p1.getX(),(int)p1.getY(),(int)p2.getX(),(int)p2.getY());
 	}
 	
 	public void paintComponent(Graphics img)

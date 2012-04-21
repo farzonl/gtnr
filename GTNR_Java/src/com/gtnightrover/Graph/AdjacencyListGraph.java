@@ -9,6 +9,7 @@ package com.gtnightrover.Graph;
 
 //import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.PriorityQueue;
 
@@ -183,9 +184,11 @@ public class AdjacencyListGraph {
 	 * @param Vertex destination - the end vertex of the traversal
 	 * @return boolean - returns true if successfully completed
 	 */
-	public boolean dfs(Vertex origin, Vertex destination) {
+	public ArrayList<Vertex> dfs(Vertex origin, Vertex destination) {
 		ArrayList<Vertex> visitedList = new ArrayList<Vertex>();
-		return dfsHelper(origin, destination, visitedList);
+		if(dfsHelper(origin, destination, visitedList))
+			return visitedList;
+		return visitedList;
 	}
 
 	/**
@@ -322,7 +325,80 @@ public class AdjacencyListGraph {
 	}
 
 
+	/*public ArrayList<Edge> Dikstras(Vertex origin, Vertex destination)
+	{
+		//FIXME
+		ArrayList<Vertex> explored = new ArrayList<Vertex> ();
+		ArrayList<Edge> neighbors = new ArrayList<Edge> ();
+		PriorityQueue<Edge> frontier = new PriorityQueue<Edge>();
+		Vertex CurrV = origin;
+		Edge CurrE = null;
+		int cost = 0;
+		frontier.addAll(CurrV.getNeighborList());
+		
+		while(true)
+		{
+			if(frontier.isEmpty())
+				return null;
+			
+			CurrE = frontier.remove();
+			CurrV = CurrE.getDestination();
+			neighbors = CurrV.getNeighborList();
+			cost = CurrE.getDistance();
+			
+			if(destination.equals(CurrV))
+				return neighbors;
+			
+			if(!explored.contains(CurrV))
+			{
+				explored.add(CurrV);
+				int prevCost = cost;
+				for(int i = 0; i < CurrV.getNeighborList().size(); i++)
+				{
+					cost = prevCost + CurrV.getNeighborList().get(i).getDistance();
+					ArrayList<Edge> Update_neighbors = new ArrayList<Edge>();
+					Update_neighbors.addAll(neighbors);
+					Update_neighbors.addAll(CurrV.getNeighborList());
+					frontier.addAll(Update_neighbors);
+				}
+			}
+			
+		}
+	}*/
+	
+    public void computePaths(Vertex source)
+    {
+        source.setMinDistance(0);
+        PriorityQueue<Vertex> vertexQueue = new PriorityQueue<Vertex>();
+      	vertexQueue.add(source);
 
+	while (!vertexQueue.isEmpty()) {
+	    Vertex u = vertexQueue.poll();
+
+            // Visit each edge exiting u
+            for (Edge e : u.getNeighborList())
+            {
+                Vertex v = e.getDestination();
+                int weight = e.getDistance();
+                int distanceThroughU = u.getMinDistance() + weight;
+		if (distanceThroughU < v.getMinDistance()) {
+		    vertexQueue.remove(v);
+		    v.setMinDistance(distanceThroughU);
+		    v.setPrevious(u);
+		    vertexQueue.add(v);
+		}
+            }
+        }
+    }
+
+    public ArrayList<Vertex> getShortestPathTo(Vertex target)
+    {
+    	ArrayList<Vertex> path = new ArrayList<Vertex>();
+        for (Vertex vertex = target; vertex != null; vertex = vertex.getPrevious())
+            path.add(vertex);
+        Collections.reverse(path);
+        return path;
+    }
 
 
 	/**
@@ -369,10 +445,17 @@ public class AdjacencyListGraph {
 		System.out.println(test.toString());
 
 		test.dfs(b,c);
+		/*ArrayList<Edge> tp = test.Dikstras(a, c);
+		for( int i = 0; i < tp.size();i++)
+		{
+			System.out.print(tp.get(i).getDestination());
+			System.out.print("\tDistance:" +tp.get(i).getDistance()+"\t");
+			System.out.println(tp.get(i).getEdgeName());
+		}*/
 
 		System.out.println();
 				
-		test.prim();
+		//test.prim();
 
 
 

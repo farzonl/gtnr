@@ -20,7 +20,33 @@ public class Vertex {
 	private String name;
 	private ArrayList<Edge> neighborList;
 	private Object data;
+	private int minDistance;
+	private Vertex previous;
 	
+	public Vertex getPrevious() {
+		return previous;
+	}
+
+
+
+	public void setPrevious(Vertex previous) {
+		this.previous = previous;
+	}
+
+
+
+	public int getMinDistance() {
+		return minDistance;
+	}
+
+
+
+	public void setMinDistance(int minDistance) {
+		this.minDistance = minDistance;
+	}
+
+
+
 	/**
 	 * constructor that creates the vertex and its
 	 * list of edges

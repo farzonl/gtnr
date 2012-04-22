@@ -14,6 +14,7 @@ import com.gtnightrover.Graph.GraphPanel2;
 import com.gtnightrover.Graph.PathBuilder;
 import com.gtnightrover.Graph.PathDrawer2;
 import com.gtnightrover.lidar.LidarSerialStream;
+import com.gtnightrover.log.LidarWrite;
 import com.gtnightrover.serial.RunableSerialThread;
 import com.gtnightrover.serial.SerialComm;
 import com.gtnightrover.visualizer.Graph;
@@ -69,6 +70,8 @@ public class MultiServer {
 				e.printStackTrace();
 			}
              stream.start();
+             LidarWrite lw = new LidarWrite(stream);
+             lw.start();
           //stream.getDistances();sendDepth
         	//RunableSerialThread.executorService.submit(new RunableSerialThread("/dev/ttyACM0", 9600, depth_arr));
              isSerial = true;

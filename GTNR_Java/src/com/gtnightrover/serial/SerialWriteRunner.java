@@ -56,17 +56,22 @@ public class SerialWriteRunner {
 
 
 			if(deltaX > 0)
-				byteDeg[1] = (byte) SerialProtocol.RHT.ordinal();
+				byteDeg[1] = (byte) SerialProtocol.RHT.getChar();
+				//byteDeg[1] = (byte) SerialProtocol.RHT.ordinal();
 			else
-				byteDeg[1] = (byte) SerialProtocol.LFT.ordinal();
+				byteDeg[1] = (byte) SerialProtocol.LFT.getChar();
+				//byteDeg[1] = (byte) SerialProtocol.LFT.ordinal();
 
-			if(deltaY > 0 || deltaX > 0)
-				byteMag[1] = (byte) SerialProtocol.FWD.ordinal();
+			if(deltaY >= 0 || deltaX >= 0)
+				 byteMag[1] = (byte) SerialProtocol.FWD.getChar();
+				//byteMag[1] = (byte) SerialProtocol.FWD.ordinal();
 
 			else if(deltaY < 0 || deltaX < 0)
-				byteMag[1] = (byte) SerialProtocol.REV.ordinal();
+				byteMag[1] = (byte) SerialProtocol.REV.getChar();
+				//byteMag[1] = (byte) SerialProtocol.REV.ordinal();
 			else
-				byteMag[1] = (byte) SerialProtocol.STOP.ordinal();
+				byteMag[1] = (byte) SerialProtocol.STOP.getChar();
+				//byteMag[1] = (byte) SerialProtocol.STOP.ordinal();
 
 
 			store.add(byteDeg);

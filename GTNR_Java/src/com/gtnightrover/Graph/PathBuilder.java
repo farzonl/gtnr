@@ -39,19 +39,37 @@ public class PathBuilder
 		robo_pos.setData(construct_point(0,0));
 		robo_pos.setName(robo_pos.getData().toString());
 		
-		//set data
+		
 		for(int i = 0; i < depth_arr.length;i++)
 		{	
+			//DAVID its counterclockwise 
+			
+			if(i >= 70 && i <= 110)
+				weighted_depth[i]+=10;
 			if(i>0 && i <= 90) 
+            {
+                    weighted_depth[i]+=i;
+                    if(i>45 && i <= 90) weighted_depth[i]+=i;
+            }
+            else if(i>90 && i <= 180) 
+            {
+                    weighted_depth[i]+=90-i;
+                    if(i>90 && i <= 135) weighted_depth[i]+=90-i;
+            }
+			//DAVID its counterclockwise 
+			/*
+			if(i >= 250 && i <= 290)
+				weighted_depth[i]+=10;
+			if(i >= 180 && i <= 270) 
 			{
-				weighted_depth[i]+=i;
-				if(i>45 && i <= 90) weighted_depth[i]+=i;
+				weighted_depth[i]+=i-180;
+				if(i>225 && i <= 270) weighted_depth[i]+=i-225;
 			}
-			else if(i>90 && i <= 180) 
+			else if(i>270 && i <=360 ) 
 			{
-				weighted_depth[i]+=90-i;
-				if(i>90 && i <= 135) weighted_depth[i]+=90-i;
-			}
+				weighted_depth[i]+=i-270;
+				if(i>315 && i <= 360) weighted_depth[i]+=i-315;
+			}*/
 
 			Point newPoint = construct_point(depth_arr[i],i);
 			System.out.println("degree: "+i+"\t"+newPoint.toString());
@@ -159,6 +177,9 @@ public class PathBuilder
 		{
 			depth_arr[i] =  Math.abs(rand.nextInt())%100;
 		}
+		
+		depth_arr[181] = 1000;
+		
 		//System.out.println(path.getDP().getPath().toString());
 		path = new PathBuilder(depth_arr);
 		//System.out.println(path.graph.toString());
@@ -179,12 +200,12 @@ public class PathBuilder
 		
 		//So I am generating a byte array here you will need to use convert_write(). I have not tested with an arduino yet
 		ArrayList<byte[]> write_list = SerialWriteRunner.convert(fromVtoP(wPath),(byte)-1,(byte)0);
-		for(int i = 0; i < write_list.size(); i++) System.out.println(" "+Arrays.toString(write_list.get(i)));
+		for(int i = 0; i < write_list.size(); i++) System.out.println("CMD: "+(char)(write_list.get(i)[1])+"\n"+Arrays.toString(write_list.get(i)));
 		
 		
 		JFrame f = new JFrame("Path");
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.getContentPane().add( new PathDrawer(path.getRobo_pos(),wPath));
+		f.getContentPane().add( new PathDrawer(path.getRobo_pos(),wPath,wPath.get(wPath.size()-1)));
 		f.pack(); 
 		f.setVisible(true);
 	}

@@ -1,4 +1,4 @@
-/**
+)/**
  *         //===========================\\
  *         ||                           ||
  *         ||  GTNR Battery Controller  ||
@@ -21,6 +21,7 @@
  *
  *   Current Questions/Issues:
  *   -------------------------
+ *     FIXED
  *     1) Should the lidar motor voltage be monitored? No analog 
  *          pins left, ADC?
  *
@@ -49,12 +50,13 @@
  *   ----------------
  *     0. Sync byte                (0xFF or -1)
  *     1. Request ID               (send as com->data2 or last byte of command)
- *     2. Current 5V               (mA)
- *     3. Current 12V              (mA)
- *     4. Current Motors           (mA)
- *     5. Temperature Body         (deg F)
- *     6. Temperature Atom Board   (deg F)
- *     7. Temperature Battery      (deg F)
+ *     2. v v Number of Bytes in data v v 
+ *     3. Current 5V               (mA)
+ *     4. Current 12V              (mA)
+ *     5. Current Motors           (mA)
+ *     6. Temperature Body         (deg F)
+ *     7. Temperature Atom Board   (deg F)
+ *     8. Temperature Battery      (deg F)
  *
  *
  *
@@ -115,8 +117,6 @@ void setup() {
 void loop() {
   check_serial();
   handle_list();
-  handle_current();
-  handle_temperature();
   delay(delay_time);
 }
 
@@ -183,6 +183,8 @@ void send_current_info(GTNR_Com *com) {
   Serial.write(0xFF);
   Serial.write(com->data2);
   Serial.write(6);
+  handle_current();
+  handle_temperature();
   for(int i=0;i< 3;i++)
     Serial.write(current_vals[i]);
   for(int i=0;i< 3;i++)

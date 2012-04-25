@@ -106,6 +106,8 @@ long positionLeft  = -999;
 long positionRight = -999;
 double distanceLeft  = 0;
 double distanceRight = 0;
+unsigned long distanceTotal = 0;
+unsigned long distanceTotal2 = 0;
 double last = 0;
 
 double photocells[NUM_PHOTOCELLS];
@@ -114,6 +116,14 @@ double irs[NUM_IR];
 GTNR_Com *head;
 GTNR_Com *tail;
 unsigned int list_size = 0;
+
+GTNR_Com *head_movement;
+GTNR_Com *tail_movement;
+unsigned int list_size_movement = 0;
+
+GTNR_Com *last_move = 0;
+int stopped_time = 0;
+int turn_time = 0;
 
 char alive = 0;
 char keyDown = 0;
@@ -135,7 +145,6 @@ void loop()
   check_serial();
   handle_list();
   handle_encoder(3);
-  handle_photocells();
   handle_ir();
 
   // blink alive
@@ -149,23 +158,50 @@ void loop()
  */
 void check_serial() {
   // ATOM BOARD
+  // Make sure there are enough bytes
   while (Serial.available() > 3) {
-    while(Serial.read() != -1);  // skip bad data... continue to the next synch bit
+    // skip bad data... continue to the next synch bit
+    // TODO: Send error message to Atom Board
+    while(Serial.read() != -1 && Serial.available() > 0);
+    // if too many bytes were skipped exit
+    if (Serial.available() < 3)
+      break;
     GTNR_Com com;
     com.command = Serial.read();
     com.data = (Serial.read() << 8) | Serial.read();
     com.data2 = Serial.read();
-    if (!head) {
-      head = &com;
-      tail = &com;
-      list_size = 1;
-    } 
-    else {
-      tail->next = &com;
-      tail = &com;
-      list_size++;
+    // add com to a linked list to be handled later
+    switch(com.command) {
+      case FWD:
+      case REV:
+      case LFT:
+      case RHT:
+      case STOP:
+        add_to_list(&com, &head_movement, &tail_movement);
+        list_size_movement++;
+        break;
+      case REQ:
+      case LOG:
+      case OFF:
+        add_to_list(&com, &head_movement, &tail_movement);
+        list_size++;
+        break;
     }
   }
+}
+
+/* Add command to list. If list is empty, set head and tail pointers.
+ *
+ */
+void add_to_list(GTNR_Com *com, GTNR_Com **_head, GTNR_Com **_tail) {
+      if (!head) {
+      *_head = com;
+      *_tail = com;
+    } 
+    else {
+      (*_tail)->next = com;
+      *_tail = com;
+    }
 }
 
 /* If there are commands in the Atom Board linked list then remove 
@@ -173,11 +209,14 @@ void check_serial() {
  */
 void handle_list() {
   // TODO: implement logging
-  while (list_size > 0) {
+  while (list_size > 0 && head) {
     GTNR_Com *com = head;
     head = head->next;
     list_size--;
-
+    if(com->data2 == BATTERY_CONTROLLER) {
+      forward_to_battery_controller(com);
+      continue;
+    }
     switch(com->command) {
     case REQ : 
       if (com->data == MOTOR_CONTROLLER) {
@@ -185,7 +224,7 @@ void handle_list() {
         break;
       }
     case LOG : 
-    case OFF : forward_to_battery_controller(com);
+    case OFF : 
       break;
     case FWD :
     case REV :
@@ -195,6 +234,50 @@ void handle_list() {
       go(com);
     }
   }
+  if (!head)
+    list_size = 0;
+    // TODO: implement logging
+  if (movement_complete() && list_size_movement > 0 && head_movement) {
+    last_move = head_movement;
+    head_movement = head_movement->next;
+    list_size_movement--;
+    go(last_move);
+  }
+  if (!head_movement)
+    list_size_movement = 0;
+}
+
+int movement_complete() {
+  if (!last_move)
+    return 1;
+  if (last_move->command = STOP) {
+    int temp = millis() - stopped_time;
+    if (temp >= last_move->data) {
+      last_move = 0;
+      distanceLeft = 0;
+      distanceRight = 0;
+    }
+  } else if (last_move->command == FWD || last_move->command == REV) {
+    int temp = (distanceLeft + distanceRight) / 1;
+    if (temp >= last_move->data) {
+      last_move = 0;
+      // if overflow then add to a high counter
+      if (distanceTotal + temp < distanceTotal)
+        distanceTotal2++;
+      distanceTotal += temp;
+      distanceLeft = 0;
+      distanceRight = 0;
+    }
+  } else if (last_move->command == LFT || last_move->command == RHT) {
+    // TODO: figure out degrees turned.
+    int temp = millis() - turn_time;
+    if (temp >= last_move->data) {
+      last_move = 0;
+      distanceLeft = 0;
+      distanceRight = 0;
+    }
+  }
+  return !last_move;
 }
 
 /* When the Atom board requests data send each analog value.
@@ -213,6 +296,8 @@ void send_current_info(GTNR_Com *com) {
   Serial.write(0xFF);
   Serial.write(com->data2);
   Serial.write(6); // size of data
+  handle_photocells();
+  handle_ir();
   for(int i=0;i< 4;i++)
     Serial.write(photocells[i]);
   for(int i=0;i< 2;i++)
@@ -230,15 +315,13 @@ void forward_to_battery_controller(GTNR_Com *com) {
   batteryController.write(com->data2);
   // TODO: implement logging
   if (com->command == REQ) {
-    char temp[9];
     // wait for battery controller to respond
     while(batteryController.available() <= 0);
     // read battery controller response
-    for(int i=0;i<9;i++)
-      temp[i] = batteryController.read();
-    // forward response to atom board
-    for(int i=0;i<9;i++)
-      Serial.write(temp[i]);
+    for(int i=0;i<9;i++) {
+      Serial.write(batteryController.read());
+      delay(1);
+    }
   }
 }
 
@@ -256,19 +339,26 @@ void go(GTNR_Com *com) {
   switch(com->command) {
   case FWD : 
     advance(com->data2); 
+    distanceLeft = 0;
+    distanceRight = 0;
     break;
   case LFT : 
     turn_L(com->data2,com->data2); 
+    distanceLeft = 0;
+    distanceRight = 0;
     break;
   case REV : 
     back_off(com->data2); 
+    turn_time = millis();
     break;
   case RHT : 
     turn_R(com->data2,com->data2); 
+    turn_time = millis();
     break;
   default : 
     halt();
     currDirection = STOP;
+    stopped_time = millis();
   }
 }
 

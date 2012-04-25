@@ -21,7 +21,7 @@ double last = 0;
 double photocells[NUM_PHOTOCELLS];
 double irs[NUM_IR];
 
-int startSpeed = 200;
+int startSpeed = 255;
 
 char alive = 0;
 char keyDown = 0;
@@ -39,12 +39,19 @@ int demo_right = 11;
 void setup(void) 
 { 
   int i;
-  for(i=4;i<=7;i++)
-    pinMode(i, OUTPUT);  
+  for(i=4;i<=7;i++) 
+    pinMode(i, OUTPUT);
+  for(i=8;i<=11;i++) {
+    pinMode(i, INPUT);
+    digitalWrite(i, LOW);
+  }
+  pinMode(12, INPUT);
+  digitalWrite(12, LOW);
   Serial
   .begin(115200);      //Set Baud Rate
 
   pinMode(13, OUTPUT);
+  
   go(FWD);
   delay(500);
   go(STOP);
@@ -185,12 +192,12 @@ void turn_L (char a,char b)             //Turn Left
 {
   analogWrite (E1,a);
   digitalWrite(M1,HIGH);    
-  analogWrite (E2,b);    
+  analogWrite (E2,digitalRead(12) ? 75 : 0);    
   digitalWrite(M2,HIGH);
 }
 void turn_R (char a,char b)             //Turn Right
 {
-  analogWrite (E1,a);
+  analogWrite (E1,digitalRead(12) ? 75 : 0;
   digitalWrite(M1,LOW);    
   analogWrite (E2,b);    
   digitalWrite(M2,LOW);

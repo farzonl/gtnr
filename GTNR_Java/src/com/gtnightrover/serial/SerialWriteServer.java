@@ -1,7 +1,6 @@
 package com.gtnightrover.serial;
 
 import gnu.io.CommPortIdentifier;
-import gnu.io.NoSuchPortException;
 import gnu.io.SerialPort;
 
 import java.io.InputStream;

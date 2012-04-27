@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.io.*;
 
-import com.gtnightrover.serial.RunableSerialThread;
-
 public class MultiServerThread extends Thread
 {
 	private Socket socket = null;
@@ -16,6 +14,7 @@ public class MultiServerThread extends Thread
 		System.out.println("client socket created");
 	}
 
+	@Override
 	public void run() {
 
 		System.out.println("run started");

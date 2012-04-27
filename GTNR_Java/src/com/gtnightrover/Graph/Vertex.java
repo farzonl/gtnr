@@ -75,6 +75,7 @@ public class Vertex {
 	 * the niffty way of formating the data to suit my needs
 	 * @return String returnString
 	 */
+	@Override
 	public String toString() {
 		String returnString ="";
 		returnString += "Vertex: "+name+" Adjacent Vertices: ";

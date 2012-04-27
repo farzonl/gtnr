@@ -20,7 +20,8 @@ public class GraphWindow extends JFrame {
 		setLocation(10, 200); // default is 0,0 (top left corner)
 		getContentPane().add(new GraphPanel(g));
 		addWindowListener(new WindowAdapter() {
-		  	public void windowClosing(WindowEvent e) {
+		  	@Override
+			public void windowClosing(WindowEvent e) {
 			   System.exit(0);
 		  	}
 		} );
@@ -32,7 +33,8 @@ public class GraphWindow extends JFrame {
 		setLocation(10, 200); // default is 0,0 (top left corner)
 		getContentPane().add(gp);
 		addWindowListener(new WindowAdapter() {
-		  	public void windowClosing(WindowEvent e) {
+		  	@Override
+			public void windowClosing(WindowEvent e) {
 			   System.exit(0);
 		  	}
 		} );

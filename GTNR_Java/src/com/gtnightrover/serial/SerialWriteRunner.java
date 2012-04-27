@@ -1,18 +1,12 @@
 package com.gtnightrover.serial;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-import gnu.io.CommPortIdentifier;
-import gnu.io.NoSuchPortException;
-import gnu.io.SerialPort;
-
 import com.gtnightrover.Graph.Point;
 import com.gtnightrover.lidar.LidarComm;
-import com.gtnightrover.serial.SerialComm;
 import com.gtnightrover.serial.SerialProtocol;
 
 public class SerialWriteRunner {
@@ -35,17 +29,17 @@ public class SerialWriteRunner {
 		}
 	}
 
-	public static ArrayList<byte[]> convert (ArrayList<Point> points,byte sync,byte loc) 
+	public static ArrayList<byte[]> convert ( ArrayList<Point> points,byte sync,byte loc) 
 	{
 
 		ArrayList<byte[]> store = new ArrayList<byte[]>();
 		for(int i = 0; i < points.size()-1; i++)
 		{
 			int deltaX  = points.get(i+1).getX() - points.get(i).getX();
-			int deltaY  = points.get(i+1).getX() - points.get(i).getX();
+			int deltaY  = points.get(i+1).getY() - points.get(i).getY();
 			byte[] byteMag = new byte[5];
 			byte[] byteDeg = new byte[5];
-			short depth  = (short) Math.sqrt(deltaX*deltaX*deltaY*deltaY);
+			short depth  = (short) Math.sqrt(deltaX*deltaX + deltaY*deltaY);
 			short degree = (short) Math.abs(Math.round(Math.toDegrees(Math.atan2(deltaY,deltaX))));
 			byteDeg[0]   = byteMag[0]  = sync;
 			byteMag[2]   = (byte) (depth >> 8);
@@ -55,18 +49,20 @@ public class SerialWriteRunner {
 			byteDeg[3]   = (byte) (degree & 0xFF);
 
 
-			if(deltaX > 0)
+			if(deltaY > 0)
 				byteDeg[1] = (byte) SerialProtocol.RHT.getChar();
 				//byteDeg[1] = (byte) SerialProtocol.RHT.ordinal();
-			else
+			else if (deltaY < 0)
 				byteDeg[1] = (byte) SerialProtocol.LFT.getChar();
 				//byteDeg[1] = (byte) SerialProtocol.LFT.ordinal();
-
-			if(deltaY >= 0 || deltaX >= 0)
+			else
+				byteDeg[1] = (byte) SerialProtocol.STOP.getChar();
+			
+			if(deltaX > 0)
 				 byteMag[1] = (byte) SerialProtocol.FWD.getChar();
 				//byteMag[1] = (byte) SerialProtocol.FWD.ordinal();
 
-			else if(deltaY < 0 || deltaX < 0)
+			else if(deltaX < 0)
 				byteMag[1] = (byte) SerialProtocol.REV.getChar();
 				//byteMag[1] = (byte) SerialProtocol.REV.ordinal();
 			else
@@ -89,7 +85,7 @@ public class SerialWriteRunner {
 		{
 			try{
 				comRW.write(write_list.get(i));
-				comRW.sleep(100);
+				Thread.sleep(100);
 				while(comRW.available() == 0);
 				System.out.println("Expected: "+Arrays.toString(byteArr));
 				System.out.println(Arrays.toString(comRW.read()));
@@ -142,7 +138,7 @@ public class SerialWriteRunner {
 			/*SerialComm.write(byteArr, port, speed);
 				read();*/
 			comRW.write(byteArr);
-			comRW.sleep(100);
+			Thread.sleep(100);
 			while(comRW.available() == 0);
 			System.out.println("Expected: "+Arrays.toString(byteArr));
 			System.out.println(Arrays.toString(comRW.read()));

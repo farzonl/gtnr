@@ -21,6 +21,7 @@ public class GraphPanel extends JPanel {
 		this.graph = graph;
 	}
 	
+	@Override
 	public void paintComponent(Graphics g) {
 	    super.paintComponent(g);
 	    g.drawLine(0, this.getHeight()>>1, this.getWidth(), this.getHeight()>>1);

@@ -3,8 +3,6 @@ package com.gtnightrover.serial;
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
 
-import java.io.IOException;
-import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
@@ -26,10 +24,11 @@ public class RunableSerialThread implements Runnable{
 		this.portName = portName;
 		this.speed = speed;
 		this.depth_arr = depth_arr;
-		this.degree = 0;
+		RunableSerialThread.degree = 0;
 
 	}
 
+	@Override
 	public void run() {
 		// TODO Auto-generated method stub
 		try {

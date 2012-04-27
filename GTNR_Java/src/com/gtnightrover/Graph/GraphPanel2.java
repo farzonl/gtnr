@@ -2,7 +2,6 @@ package com.gtnightrover.Graph;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.List;
 import java.awt.Point;
 import java.util.Random;
 
@@ -44,7 +43,7 @@ public class GraphPanel2 extends JPanel {
 			if(null != points.get(i))
 			{
 				draw_line(img,robo_pos, 
-						(Point)points.get(i),randomColor());
+						points.get(i),randomColor());
 			
 			
 				draw_line(img,points.get(i), 
@@ -61,6 +60,7 @@ public class GraphPanel2 extends JPanel {
 		img.drawLine((int)p1.getX(),(int)p1.getY(),(int)p2.getX(),(int)p2.getY());
 	}
 	
+	@Override
 	public void paintComponent(Graphics img)
 	{
 	    super.paintComponent(img);

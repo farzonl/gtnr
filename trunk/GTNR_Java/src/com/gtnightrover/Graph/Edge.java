@@ -91,6 +91,7 @@ public class Edge implements Comparable{
 	 *@param Object arg0- the edge you want compared
 	 *@return int - lets the priorityQueue know where to put the value
 	 */
+	@Override
 	public int compareTo(Object arg0) {
 		Edge val =(Edge)(arg0);
 		return this.getDistance() - val.getDistance();

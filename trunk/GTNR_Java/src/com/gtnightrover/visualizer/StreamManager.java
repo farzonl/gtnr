@@ -1,6 +1,5 @@
 package com.gtnightrover.visualizer;
 
-import com.gtnightrover.lidar.LidarComm;
 import com.gtnightrover.lidar.LidarSerialStream;
 
 public class StreamManager extends Thread {

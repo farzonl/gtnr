@@ -44,7 +44,15 @@ public class PathBuilder
 		{	
 			//DAVID its counterclockwise 
 			
-			if(i >= 70 && i <= 110)
+			if ( (i >= 0 && i <= 10) || (i >= 350 && i <= 359))
+				weighted_depth[i]*=2;
+			else if ( (i >= 11 && i <= 45) || (i >= 315 && i <= 349))
+				weighted_depth[i]*=1.8;
+			else if ( (i >= 46 && i <= 90) || (i >= 270 && i <= 314))
+				weighted_depth[i]*=1.5;
+			
+			
+			/*if(i >= 70 && i <= 110)
 				weighted_depth[i]+=10;
 			if(i>0 && i <= 90) 
             {
@@ -55,7 +63,7 @@ public class PathBuilder
             {
                     weighted_depth[i]+=90-i;
                     if(i>90 && i <= 135) weighted_depth[i]+=90-i;
-            }
+            }*/
 			//DAVID its counterclockwise 
 			/*
 			if(i >= 250 && i <= 290)
@@ -178,7 +186,7 @@ public class PathBuilder
 			depth_arr[i] =  Math.abs(rand.nextInt())%100;
 		}
 		
-		depth_arr[181] = 1000;
+		//depth_arr[45] = 300;
 		
 		//System.out.println(path.getDP().getPath().toString());
 		path = new PathBuilder(depth_arr);
@@ -217,6 +225,8 @@ public class PathBuilder
 	public void setgDistance(int[] gDistance) {
 		this.gDistance = gDistance;
 	}
+	
+	private static class Temp {}
 
 	
 }

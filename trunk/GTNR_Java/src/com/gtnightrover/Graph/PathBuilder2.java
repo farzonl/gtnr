@@ -8,9 +8,9 @@ import java.util.Random;
 
 import javax.swing.JFrame;
 
-import org.jgrapht.*;
 import org.jgrapht.alg.DijkstraShortestPath;
-import org.jgrapht.graph.*;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.ListenableUndirectedWeightedGraph;
 
 import com.gtnightrover.serial.SerialComm;
 

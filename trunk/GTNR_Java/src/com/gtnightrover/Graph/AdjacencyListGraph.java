@@ -163,6 +163,7 @@ public class AdjacencyListGraph {
 	 * specialized toString() method you guys asked for
 	 * @return returnString - the correctly formated data
 	 */
+	@Override
 	public String toString() {
 		String returnString ="";
 		for(int i = 0;i< adjacencyList.size(); i++) {

@@ -1,18 +1,10 @@
 package com.gtnightrover.serial;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Scanner;
 
-import gnu.io.CommPortIdentifier;
-import gnu.io.NoSuchPortException;
-import gnu.io.SerialPort;
-
-
-import com.gtnightrover.Graph.Point;
 import com.gtnightrover.lidar.LidarComm;
-import com.gtnightrover.serial.SerialComm;
 import com.gtnightrover.serial.SerialProtocol;
 
 
@@ -107,7 +99,7 @@ public class SerialWriteTest {
 				/*SerialComm.write(byteArr, port, speed);
 				read();*/
 				comRW.write(byteArr);
-				comRW.sleep(100);
+				Thread.sleep(100);
 				while(comRW.available() == 0);
 				System.out.println("Expected: "+Arrays.toString(byteArr));
 				System.out.println(Arrays.toString(comRW.read()));

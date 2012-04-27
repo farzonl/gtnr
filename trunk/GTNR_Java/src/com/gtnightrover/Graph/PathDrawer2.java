@@ -3,7 +3,6 @@ package com.gtnightrover.Graph;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics;
 import java.util.Random;
 import java.util.ArrayList;
 import javax.swing.JPanel;/**
@@ -59,6 +58,7 @@ public class PathDrawer2 extends JPanel {
 		img.drawLine(p1.getX()+400,p1.getY()+400,p2.getX()+400,p2.getY()+400);
 	}
 	
+	@Override
 	public void paintComponent(Graphics img)
 	{
 	    super.paintComponent(img);

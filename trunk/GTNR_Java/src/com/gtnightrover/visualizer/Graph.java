@@ -77,8 +77,8 @@ public class Graph {
 			return null;
 		double y = -distance * Math.cos(degree);
 		double x = -distance * Math.sin(degree);
-		x = x / (double)(maxX);
-		y = y / (double)(maxY);
+		x = x / (maxX);
+		y = y / (maxY);
 		Point p = new Point((int)(x*width)+(width>>1), (int)(y*height)+(height>>1));
 		return p;
 	}

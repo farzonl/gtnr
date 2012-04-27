@@ -16,7 +16,8 @@ public class Server implements Runnable {
 		executorService.submit(new Server());
 	}
 	
-    public void run() {
+    @Override
+	public void run() {
     	
     	ArrayList<Integer> depth_arr = new ArrayList<Integer>();
 		for(int i = 0; i < 360;i++)

@@ -33,8 +33,8 @@ public class GraphPanel extends JPanel {
 				g.fillOval(p.x-2, p.y-20, POINT_WIDTH, POINT_HEIGHT);
 					g.setColor(Color.red);
 			if (graph.start != null) {
-				g.fillOval(graph.start.x, graph.start.y, POINT_WIDTH, POINT_HEIGHT);
-				g.fillOval(graph.end.x, graph.end.y, POINT_WIDTH, POINT_HEIGHT);
+				g.fillOval(graph.start.x-2, graph.start.y-20, POINT_WIDTH, POINT_HEIGHT);
+				g.fillOval(graph.end.x-2, graph.end.y-20, POINT_WIDTH, POINT_HEIGHT);
 			}
 			g.setColor(Color.black);
 		}

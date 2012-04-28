@@ -37,12 +37,18 @@ public class Main {
 		
 		// Declare and initialize serial communication with lidar driver. This
 		// is required to optimize lidar speed.
+		/* FIXME: 
 		LidarComm dfr = new LidarComm("/dev/ttyUSB0", 9600);
+		/**/
+		LidarComm dfr = null;
 		
 		// Declare and initialize serial communication with lidar module.
 		// Note the LidarComm object being passed in. It is optional, but required
 		// for speed control.
+		/* FIXME:
 		LidarSerialStream lss = new LidarSerialStream("/dev/ttyACM0", 115200, dfr);
+		/**/
+		LidarSerialStream lss = new LidarSerialStream(null, 115200, dfr);
 		lss.start();
 		
 		// Create the thread which will automatically update the GUI with lidar data

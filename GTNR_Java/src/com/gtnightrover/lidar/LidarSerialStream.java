@@ -3,9 +3,12 @@ package com.gtnightrover.lidar;
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
 
+import java.awt.Point;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import com.gtnightrover.visualizer.Graph;
 
 public class LidarSerialStream extends Thread {
 
@@ -13,33 +16,38 @@ public class LidarSerialStream extends Thread {
 	private OutputStream outStream;
 	private int[] distances;
 	private final boolean DEBUG = false;
+	private boolean TEST_DATA = false;
 	private long lastTime = System.currentTimeMillis();
 	private byte[] currSpeed = new byte[2];
 	private LidarComm driver;
 
 	public LidarSerialStream(String usbPort, int speed) throws Exception {
 		super(usbPort + ":" + speed);
-		CommPortIdentifier portId = CommPortIdentifier
-				.getPortIdentifier(usbPort);
-
-		SerialPort port = (SerialPort) portId.open("serial talk", 4000);
-		serialStream = port.getInputStream();
-		outStream = port.getOutputStream();
-		port.setSerialPortParams(speed, SerialPort.DATABITS_8,
-				SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+		if (usbPort != null) {
+			CommPortIdentifier portId = CommPortIdentifier
+					.getPortIdentifier(usbPort);
+	
+			SerialPort port = (SerialPort) portId.open("serial talk", 4000);
+			serialStream = port.getInputStream();
+			outStream = port.getOutputStream();
+			port.setSerialPortParams(speed, SerialPort.DATABITS_8,
+					SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+		}
 		distances = new int[360];
 	}
 
 	public LidarSerialStream(String usbPort, int speed, LidarComm driver) throws Exception {
 		super(usbPort + ":" + speed);
-		CommPortIdentifier portId = CommPortIdentifier
-				.getPortIdentifier(usbPort);
-
-		SerialPort port = (SerialPort) portId.open("serial talk", 4000);
-		serialStream = port.getInputStream();
-		outStream = port.getOutputStream();
-		port.setSerialPortParams(speed, SerialPort.DATABITS_8,
-				SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+		if (usbPort != null) {
+			CommPortIdentifier portId = CommPortIdentifier
+					.getPortIdentifier(usbPort);
+	
+			SerialPort port = (SerialPort) portId.open("serial talk", 4000);
+			serialStream = port.getInputStream();
+			outStream = port.getOutputStream();
+			port.setSerialPortParams(speed, SerialPort.DATABITS_8,
+					SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+		}
 		distances = new int[360];
 		this.driver = null;//driver;
 	}
@@ -66,7 +74,7 @@ public class LidarSerialStream extends Thread {
 	public void run() {
 		int curr = 0x00;
 		long lastTime = System.currentTimeMillis();
-		while (true) {
+		while (true && !TEST_DATA) {
 			try {
 				if (serialStream.available() > 0) {
 					curr = serialStream.read();
@@ -88,6 +96,13 @@ public class LidarSerialStream extends Thread {
 				if (driver != null)
 					driver.write(getCurrSpeed());
 			}
+		}
+		while (TEST_DATA) {
+			for(int i=0;i<distances.length;i++) 
+				distances[i] = (int)(500 + Math.random() * 250);
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) { }
 		}
 	}
 
@@ -175,6 +190,44 @@ public class LidarSerialStream extends Thread {
 				return true;
 			} catch (IOException e) { }
 		return false;
+	}
+	
+	public Point getMaximalPoint() {
+		double max_dist = 0;
+		int max_index = 0;
+		double temp;
+		for(double i=0;i<distances.length>>1;i++) {
+			temp = distances[(int)i];
+			if (temp > max_dist) {
+				max_dist = temp;
+				max_index = (int)i;
+			}
+			temp = distances[(int)Math.abs(359-i)];
+			if (temp > max_dist) {
+				max_dist = temp;
+				max_index = (int)i;
+			}
+		}
+		return Graph.toPixel(Math.toRadians(max_index), distances[max_index]);
+	}
+	
+	public Point getWeightedMaximalPoint() {
+		double max_dist = 0;
+		int max_index = 0;
+		double temp;
+		for(double i=0;i<distances.length>>1;i++) {
+			temp = distances[(int)i] * (2 - i / 180);
+			if (temp > max_dist) {
+				max_dist = temp;
+				max_index = (int)i;
+			}
+			temp = distances[(int)Math.abs(359-i)] * (2 - i / 180);
+			if (temp > max_dist) {
+				max_dist = temp;
+				max_index = (int)i;
+			}
+		}
+		return Graph.toPixel(Math.toRadians(max_index), distances[max_index]);
 	}
 	
 	private static class Distance {

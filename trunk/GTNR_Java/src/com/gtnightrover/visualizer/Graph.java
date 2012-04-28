@@ -22,16 +22,16 @@ public class Graph {
 		super();
 		if (width <= 0 || height <= 0)
 			throw new IllegalArgumentException("Width and Height must be positive i.e. * > 0.");
-		this.width = width;
-		this.height = height;
+		Graph.width = width;
+		Graph.height = height;
 		if (maxX <= minX)
 			throw new IllegalArgumentException("maxX must be greater than minX.");
-		this.minX = minX;
-		this.maxX = maxX;
+		Graph.minX = minX;
+		Graph.maxX = maxX;
 		if (maxY <= minY)
 			throw new IllegalArgumentException("maxY must be greater than minY.");
-		this.minY = minY;
-		this.maxY = maxY;
+		Graph.minY = minY;
+		Graph.maxY = maxY;
 		points = new LinkedList<Point>();
 	}
 	
@@ -147,7 +147,7 @@ public class Graph {
 		if (pts == null)
 			return;
 		for (int i=0;i<pts.length;i++) {
-			double rad = (double)i*2*Math.PI / 360;
+			double rad = Math.toRadians(i);
 			points.add(toPixel(rad, pts[i]));
 			if (bw != null)
 				try {

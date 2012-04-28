@@ -6,8 +6,8 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 import com.gtnightrover.Graph.Point;
+import com.gtnightrover.dfrduino.SerialProtocol;
 import com.gtnightrover.lidar.LidarComm;
-import com.gtnightrover.serial.SerialProtocol;
 
 public class SerialWriteRunner {
 

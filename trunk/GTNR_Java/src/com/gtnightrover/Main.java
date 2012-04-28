@@ -1,5 +1,6 @@
 package com.gtnightrover;
 
+import com.gtnightrover.dfrduino.Lidar;
 import com.gtnightrover.lidar.LidarComm;
 import com.gtnightrover.lidar.LidarSerialStream;
 import com.gtnightrover.visualizer.Graph;
@@ -49,10 +50,11 @@ public class Main {
 		LidarSerialStream lss = new LidarSerialStream("/dev/ttyACM0", 115200, dfr);
 		/**/
 		LidarSerialStream lss = new LidarSerialStream(null, 115200, dfr);
+		Lidar lidar = new Lidar(lss, true);
 		lss.start();
 		
 		// Create the thread which will automatically update the GUI with lidar data
-		StreamManager sm = new StreamManager(g, f, lss);
+		StreamManager sm = new StreamManager(g, f, lidar);
 		sm.dfr = dfr;
 		sm.start();
 	}

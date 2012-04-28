@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 import com.gtnightrover.Graph.Point;
+import com.gtnightrover.dfrduino.SerialProtocol;
 
 public class SerialWriteServer {
 

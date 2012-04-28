@@ -1,16 +1,16 @@
 package com.gtnightrover.visualizer;
 
+import com.gtnightrover.dfrduino.Lidar;
 import com.gtnightrover.lidar.LidarComm;
-import com.gtnightrover.lidar.LidarSerialStream;
 
 public class StreamManager extends Thread {
 
 	private Graph g;
 	private GraphWindow gw;
-	private LidarSerialStream lss;
+	private Lidar lss;
 	public LidarComm dfr;
 	
-	public StreamManager(Graph g, GraphWindow gw, LidarSerialStream lss) {
+	public StreamManager(Graph g, GraphWindow gw, Lidar lss) {
 		super();
 		this.g = g;
 		this.gw = gw;
@@ -25,7 +25,7 @@ public class StreamManager extends Thread {
 				g.addAll(lss.getDistances());
 				
 				g.start = Graph.toPixel(0, 0);
-				g.end = lss.getWeightedMaximalPoint();
+				g.end = lss.getMaximalPoint();
 				
 				gw.repaint();
 			} catch (Exception e1) {

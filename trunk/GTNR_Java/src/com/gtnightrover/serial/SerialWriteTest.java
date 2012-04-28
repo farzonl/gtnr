@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Scanner;
 
+import com.gtnightrover.dfrduino.SerialProtocol;
 import com.gtnightrover.lidar.LidarComm;
-import com.gtnightrover.serial.SerialProtocol;
 
 
 public class SerialWriteTest {

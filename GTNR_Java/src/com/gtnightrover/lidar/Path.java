@@ -4,7 +4,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.gtnightrover.serial.RoverCommand;
+import com.gtnightrover.dfrduino.RoverCommand;
 
 public class Path {
 

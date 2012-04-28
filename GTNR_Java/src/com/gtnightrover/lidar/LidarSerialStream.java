@@ -4,6 +4,8 @@ import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
 
 import java.awt.Point;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;

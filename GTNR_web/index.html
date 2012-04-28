@@ -1,0 +1,76 @@
+<html>
+<head>
+	<title>Georgia Tech Night Rover</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<link type="text/css" href="css/start/jquery-ui-1.8.19.custom.css" rel="stylesheet" />
+	<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" src="js/jquery-ui-1.8.19.custom.min.js"></script>
+	<script type="text/javascript" src="js/gtnr_front.js"></script>
+	<script>
+	$(function() {
+		$( "#tabs" ).tabs();
+	});
+	</script>
+</head>
+<body>
+
+	<div id="tabs">
+		<ul>
+			<li><a href="#tabs-1">Live Data</a></li>
+			<li><a href="#tabs-2">About GT Night Rover</a></li>
+			<li><a href="#tabs-3">Help</a></li>
+		</ul>
+		<div id="tabs-1">
+			<div id="title">
+				<h2>Geogria Tech Night Rover</h2>
+				<h3>Autonomous Solar Harvesting Planetary Rover</h3>
+			</div>
+			<hr />
+			<div id="content">
+				<div id="environment_display" style="float:left;">
+					<svg id="graph" xmlns="http://www.w3.org/2000/svg" version="1.1"
+						 width="500px" height="500px"
+	 					 viewBox="0 0 500 500">
+	 					<!-- 
+  						<rect x="0" y="0" width="500" height="500"
+ 							  style="fill:gray;stroke:black;stroke-width:3;fill-opacity:0.1;
+  							  stroke-opacity:0.9"/>
+						<defs>
+  							<radialGradient id="grad1" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+      							<stop offset="0%" style="stop-color:rgb(0,0,255);stop-opacity:1" />
+      							<stop offset="100%" style="stop-color:rgb(255,255,255);stop-opacity:0" />
+    						</radialGradient>
+  						</defs>
+  						<ellipse cx="233" cy="237" rx="50" ry="30" fill="url(#grad1)" />
+  						<ellipse cx="267" cy="235" rx="50" ry="30" fill="url(#grad1)" />
+  						<ellipse cx="233" cy="267" rx="50" ry="30" fill="url(#grad1)" />
+  						<ellipse cx="267" cy="267" rx="50" ry="30" fill="url(#grad1)" />
+  						<rect x="233" y="237" width="34" height="26"
+  						      style="stroke:black;stroke-width:2;fill-opacity:0;" />
+  						<rect x="244" y="242" width="12" height="16"
+  						      style="stroke:black;stroke-width:2;fill-opacity:0;" />
+  						<rect x="233" y="187" width="5" height="50"
+  						      style="stroke:black;stroke-width:2;fill-opacity:0;" />
+  						<rect x="262" y="187" width="5" height="50"
+  						      style="stroke:black;stroke-width:2;fill-opacity:0;" />
+  						-->
+					</svg>
+				</div>
+				<div id="analog_stats" style='float:left'>
+					<!--  TODO: fill with js -->
+				</div>
+				<div style="clear:both"></div>
+			</div>
+		</div>
+		<div id="tabs-2">
+			<p>Coming Soon...</p>
+		</div>
+		<div id="tabs-3">
+			<p>Coming Soon...</p>
+		</div>
+	</div>
+	<script>
+	update_display();
+	</script>
+</body>
+</html>

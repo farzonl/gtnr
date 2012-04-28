@@ -3,6 +3,7 @@ int max_speed = 175;
 int comm_engaged = 0;
 
 void setup() {
+  delay(5000);
   Serial.begin(9600);
   pinMode(4, OUTPUT);
   pinMode(5, OUTPUT);
@@ -35,3 +36,4 @@ int checkSpeed() {
   }
   return curr_speed < max_speed && !comm_engaged ? -1 : 0;
 }
+

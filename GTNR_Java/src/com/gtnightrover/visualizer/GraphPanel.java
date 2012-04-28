@@ -1,5 +1,6 @@
 package com.gtnightrover.visualizer;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 
@@ -27,8 +28,15 @@ public class GraphPanel extends JPanel {
 	    g.drawLine(0, this.getHeight()>>1, this.getWidth(), this.getHeight()>>1);
 		g.drawLine(this.getWidth()>>1, 0, this.getWidth()>>1, this.getHeight());
 		
-		if (graph != null)
+		if (graph != null) {
 			for (Point p : graph.getPixelPoints())
 				g.fillOval(p.x-2, p.y-20, POINT_WIDTH, POINT_HEIGHT);
+					g.setColor(Color.red);
+			if (graph.start != null) {
+				g.fillOval(graph.start.x, graph.start.y, POINT_WIDTH, POINT_HEIGHT);
+				g.fillOval(graph.end.x, graph.end.y, POINT_WIDTH, POINT_HEIGHT);
+			}
+			g.setColor(Color.black);
+		}
 	  }
 }

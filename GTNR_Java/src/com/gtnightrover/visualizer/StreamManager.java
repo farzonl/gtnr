@@ -1,12 +1,21 @@
 package com.gtnightrover.visualizer;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import com.gtnightrover.Graph.PathBuilder;
+import com.gtnightrover.Graph.Point;
+import com.gtnightrover.lidar.LidarComm;
 import com.gtnightrover.lidar.LidarSerialStream;
+import com.gtnightrover.serial.SerialWriteRunner;
 
 public class StreamManager extends Thread {
 
 	private Graph g;
 	private GraphWindow gw;
 	private LidarSerialStream lss;
+	public LidarComm dfr;
 	
 	public StreamManager(Graph g, GraphWindow gw, LidarSerialStream lss) {
 		super();
@@ -22,13 +31,37 @@ public class StreamManager extends Thread {
 			try {
 				g.clear();
 				g.addAll(lss.getDistances());
+				
+				
+				
+				PathBuilder path = new PathBuilder(lss.getDistances());
+				ArrayList<Point> pList = PathBuilder.fromVtoP(path.weighted_path());
+				Point p0 = pList.get(0);
+				Point p1 = pList.get(pList.size() - 1);
+				System.out.println(p1);
+				DoublePoint dp0 = new DoublePoint(p0.getX(), p0.getY());
+				DoublePoint dp1 = new DoublePoint(p1.getX(), p1.getY());
+				System.out.println(dp1);
+				java.awt.Point pp0 = g.toPixel(dp0);
+				java.awt.Point pp1 = g.toPixel(dp1);
+				System.out.println(pp1);
+				g.start = pp0;
+				g.end = pp1;
+				ArrayList<byte[]> Abyte = SerialWriteRunner.convert(PathBuilder.fromVtoP(path.weighted_path()), (byte) 0xFF,(byte)'M');
+				for(int i = 0; i < Abyte.size();i++)
+					System.out.println("CMD: "+(char)(Abyte.get(i)[1])+"\n"+Arrays.toString(Abyte.get(i)));
+					//dfr.write(Abyte.get(i));
+					 /**/
+				
+				
+				
 				gw.repaint();
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			try {
-				Thread.sleep(100);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

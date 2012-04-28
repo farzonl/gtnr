@@ -13,5 +13,6 @@
 	<classpathentry kind="lib" path="/home/david/EclipseProjects/GTNR/GTNR_Java/lib/mail.jar"/>
 	<classpathentry kind="lib" path="/home/david/EclipseProjects/GTNR/GTNR_Java/lib/pde.jar"/>
 	<classpathentry kind="lib" path="/home/david/EclipseProjects/GTNR/GTNR_Java/lib/RXTXcomm-2.2pre2.jar"/>
+	<classpathentry kind="lib" path="/home/david/EclipseProjects/GTNR/GTNR_Java/lib/jgrapht-jdk1.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

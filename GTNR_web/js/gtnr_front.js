@@ -39,6 +39,8 @@ var power = {
 		'w'      :0 	 // W
 };
 
+var return_obj;
+
 function update_display() {
 	var i;
 	// TODO: get info through AJAX
@@ -67,20 +69,37 @@ function update_display() {
 
 function update_from_server() {
 	$.ajax("scripts/public_api.php").done(ret_update_from_server);
+	setTimeout("update_from_server();",200);
 }
 
 function ret_update_from_server(data) {
 	if (data) {
-		// sensors
-		sensors.distances = data.sensors.distances;
-		sensors.ir = data.sensors.ir;
-		sensors.photocells = data.sensors.photocells;
+		data = jQuery.parseJSON(data);
 		
 		// atom
 		atom.cpu[0] = data.atom.cpu1;
 		atom.cpu[1] = data.atom.cpu2;
 		atom.mem = data.atom.mem;
+		atom.alive = data.atom.alive;
+		atom.sleep = data.atom.sleep;
+		atom.io = data.atom.io;
 		
+		// sensors
+		sensors.distances = data.sensors.distances;
+		sensors.ir = data.sensors.ir;
+		sensors.photocells = data.sensors.photocells;
+		
+		// power
+		power.soc = data.power.soc;
+		power.v_bat = data.power.v_bat;
+		power.v_panel = data.power.v_panel;
+		power.c_bat = data.power.c_bat;
+		power.c_panel = data.power.c_panel;
+		power.w = power.v_bat * power.c_bat;
+		
+
+		generate_graph();
+		generate_stats();
 	}
 }
 
@@ -91,7 +110,7 @@ function generate_stats() {
 	'Solar Panel V       = '+power.v_panel+' V\n'+
 	'Battery Current     = '+power.c_bat+' A\n'+
 	'Solar Panel Current = '+power.c_panel+' A\n'+
-	'Total Power         = '+power.power+' W \n'+
+	'Total Power         = '+power.w+' W \n'+
 	'</pre></td><td><pre>\n'+
 	'Cpu 1  = '+atom.cpu[0]+'%\n'+ 
 	'Cpu 2  = '+atom.cpu[1]+'%\n'+
@@ -181,6 +200,7 @@ function point_to_pixel(p) {
 }
 
 function angle_to_pixel(distance, degree) {
+	degree = degree * 2 * Math.PI / 360;
 	if (distance < 0)
 		return { 'x':0, 'y':0 };
 	var _y = -distance * Math.cos(degree);

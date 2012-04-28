@@ -1,9 +1,12 @@
 <?php
 
-$dist_filename = "log/dist.log";
-$sensors_filename = "log/sensors.log";
-$power_filename = "log/power.log";
-$atom_filename = "log/atom.log";
+// FIXME:
+//$log_path = "/home/[username]/GTNR/log/";
+$log_path = "/home/david/EclipseProjects/GTNR/GTNR_web/log/";
+$dist_filename = "$log_path/dist.log";
+$sensors_filename = "$log_path/sensors.log";
+$power_filename = "$log_path/power.log";
+$atom_filename = "$log_path/atom.log";
 
 class Atom {
 	public $cpu1;
@@ -57,14 +60,32 @@ class Sensors {
 	}
 }
 
+function get_random_array() {
+	$arr = array();
+	for($i=0;$i<360;$i++)
+		$arr[] = ($i*11000/360) + rand(0, 500) - 250;
+	return $arr;
+}
+
 function get_data() {
+	
+	global $dist_filename;
+	global $sensors_filename;
+	global $power_filename;
+	global $atom_filename;
+	
 	// Sensors
 	$sensors = new Sensors();
 	$file_handle = fopen($dist_filename, "r");
 	$i = 0;
 	for ($i=0;$i<360;$i++)
-		$sensors->distances[$i++] = intval(fgets($file_handle));
+		$sensors->distances[$i] = intval(fgets($file_handle));
 	fclose($file_handle);
+	/**/
+	/*
+	$sensors->distances = get_random_array();
+	/**/
+	
 	$file_handle = fopen($sensors_filename, "r");
 	$sensors->ir[0] = intval(fgets($file_handle));
 	$sensors->ir[1] = intval(fgets($file_handle));
@@ -75,22 +96,22 @@ function get_data() {
 	// Power
 	$power = new Power();
 	$file_handle = fopen($power_filename, "r");
-	$power->soc = intval(fgets($file_handle));
-	$power->v_bat = intval(fgets($file_handle));
-	$power->v_panel = intval(fgets($file_handle));
-	$power->c_bat = intval(fgets($file_handle));
-	$power->c_panel = intval(fgets($file_handle));
+	$power->soc = floatval(fgets($file_handle));
+	$power->v_bat = floatval(fgets($file_handle));
+	$power->v_panel = floatval(fgets($file_handle));
+	$power->c_bat = floatval(fgets($file_handle));
+	$power->c_panel = floatval(fgets($file_handle));
 	fclose($file_handle);
 	
 	// Atom
 	$atom = new Atom();
 	$file_handle = fopen($atom_filename, "r");
-	$atom->cpu1 = intval(fgets($file_handle));
-	$atom->cpu2 = intval(fgets($file_handle));
-	$atom->mem = intval(fgets($file_handle));
-	$atom->alive = intval(fgets($file_handle));
-	$atom->sleep = intval(fgets($file_handle));
-	$atom->io = intval(fgets($file_handle));
+	$atom->cpu1 = floatval(fgets($file_handle));
+	$atom->cpu2 = floatval(fgets($file_handle));
+	$atom->mem = floatval(fgets($file_handle));
+	$atom->alive = floatval(fgets($file_handle));
+	$atom->sleep = floatval(fgets($file_handle));
+	$atom->io = floatval(fgets($file_handle));
 	fclose($file_handle);
 	
 	echo json_encode(array("sensors"=>$sensors, "power"=>$power, "atom"=>$atom));

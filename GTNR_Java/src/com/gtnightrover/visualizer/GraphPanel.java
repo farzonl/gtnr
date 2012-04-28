@@ -35,6 +35,7 @@ public class GraphPanel extends JPanel {
 			if (graph.start != null) {
 				g.fillOval(graph.start.x-2, graph.start.y-20, POINT_WIDTH, POINT_HEIGHT);
 				g.fillOval(graph.end.x-2, graph.end.y-20, POINT_WIDTH, POINT_HEIGHT);
+				g.drawLine(graph.start.x-1, graph.start.y-19, graph.end.x-1, graph.end.y-19);
 			}
 			g.setColor(Color.black);
 		}

@@ -6,6 +6,7 @@ import java.util.Random;
 import javax.swing.JFrame;
 
 import com.gtnightrover.serial.SerialWriteRunner;
+import com.gtnightrover.visualizer.Graph;
 
 
 
@@ -44,12 +45,12 @@ public class PathBuilder
 		{	
 			//DAVID its counterclockwise 
 			
-			if ( (i >= 0 && i <= 10) || (i >= 350 && i <= 359))
+			/*if ( (i >= 0 && i <= 10) || (i >= 350 && i <= 359))
 				weighted_depth[i]*=2;
 			else if ( (i >= 11 && i <= 45) || (i >= 315 && i <= 349))
 				weighted_depth[i]*=1.8;
 			else if ( (i >= 46 && i <= 90) || (i >= 270 && i <= 314))
-				weighted_depth[i]*=1.5;
+				weighted_depth[i]*=1.5;*/
 			
 			
 			/*if(i >= 70 && i <= 110)
@@ -80,7 +81,7 @@ public class PathBuilder
 			}*/
 
 			Point newPoint = construct_point(depth_arr[i],i);
-			System.out.println("degree: "+i+"\t"+newPoint.toString());
+			//System.out.println("degree: "+i+"\t"+newPoint.toString());
 			points.add(newPoint);
 			depth_pos.add(construct_vertex(newPoint,depth_arr[i]));
 			depth_pos.get(i).setData(points.get(i));
@@ -97,10 +98,14 @@ public class PathBuilder
 	
 	public Point construct_point(int depth, int degree)
 	{
-		double rad = (Math.PI*degree)/180;
+		/*double rad = (Math.PI*degree)/180;
 		int x = (int) (depth*Math.cos(rad));
 		int y = (int) (depth*Math.sin(rad));
-		return new Point(x,y);
+		//y=-y;
+		return new Point(x,y);*/
+		
+		java.awt.Point jp = Graph.toPixel(degree, depth);
+		return new Point(jp.x,jp.y);
 	}
 	
 	public Vertex construct_vertex(Point point, int depth)

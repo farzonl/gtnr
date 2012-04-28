@@ -41,7 +41,7 @@ public class LidarSerialStream extends Thread {
 		port.setSerialPortParams(speed, SerialPort.DATABITS_8,
 				SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
 		distances = new int[360];
-		this.driver = driver;
+		this.driver = null;//driver;
 	}
 
 	public int[] getDistances() {
@@ -144,7 +144,8 @@ public class LidarSerialStream extends Thread {
 		long temp = System.currentTimeMillis();
 		if (temp - lastTime > 200) {
 			lastTime = temp;
-			System.out.println(Integer.toHexString(arr[3]) + ":" + Integer.toHexString(arr[4]));
+			if (DEBUG)
+				System.out.println(Integer.toHexString(arr[3]) + ":" + Integer.toHexString(arr[4]));
 		}
 	}
 

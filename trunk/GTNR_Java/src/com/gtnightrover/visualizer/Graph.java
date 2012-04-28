@@ -13,9 +13,10 @@ public class Graph {
 	private boolean FILE_DUMP = false;
 	private String DUMP_DIR = "/home/david/Desktop/Lidar_Dump/";
 	
-	private int width, height;
-	private int minX, minY, maxX, maxY;
+	private static int width, height;
+	private static int minX, minY, maxX, maxY;
 	private List<Point> points;
+	public Point start, end;
 	
 	public Graph(int width, int height, int minX, int minY, int maxX, int maxY) {
 		super();
@@ -57,13 +58,11 @@ public class Graph {
 	public Point toPixel(DoublePoint p) {
 		if (p == null)
 			return null;
-		if (!checkRange(p))
-			return null;
 		double x = p.x;
 		double y = p.y;
 		x = x / (maxX - minX);
 		y = y / (maxY - minY);
-		return new Point((int)(x*width), (int)(y*height));
+		return new Point((int)(x*width)+width>>1, (int)(y*height)+height>>1);
 	}
 	
 	/**
@@ -72,7 +71,7 @@ public class Graph {
 	 * @param distance
 	 * @return
 	 */
-	public Point toPixel(double degree, double distance) {
+	public static Point toPixel(double degree, double distance) {
 		if (distance < 0)
 			return null;
 		double y = -distance * Math.cos(degree);

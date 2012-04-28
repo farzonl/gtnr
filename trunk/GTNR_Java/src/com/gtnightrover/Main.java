@@ -46,7 +46,9 @@ public class Main {
 		lss.start();
 		
 		// Create the thread which will automatically update the GUI with lidar data
-		new StreamManager(g, f, lss).start();
+		StreamManager sm = new StreamManager(g, f, lss);
+		sm.dfr = dfr;
+		sm.start();
 	}
 
 }

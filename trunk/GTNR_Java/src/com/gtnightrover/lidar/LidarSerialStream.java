@@ -16,7 +16,7 @@ public class LidarSerialStream extends Thread {
 	private OutputStream outStream;
 	private int[] distances;
 	private final boolean DEBUG = false;
-	private boolean TEST_DATA = false;
+	private boolean TEST_DATA = true;
 	private long lastTime = System.currentTimeMillis();
 	private byte[] currSpeed = new byte[2];
 	private LidarComm driver;
@@ -99,7 +99,7 @@ public class LidarSerialStream extends Thread {
 		}
 		while (TEST_DATA) {
 			for(int i=0;i<distances.length;i++) 
-				distances[i] = (int)(500 + Math.random() * 250);
+				distances[i] = (int)(5000 + Math.random() * 250);
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) { }

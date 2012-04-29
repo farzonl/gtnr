@@ -72,8 +72,8 @@ public class MultiServer {
         }
         /*for demo only*/
         System.out.println("Lidar Serial Stream Started");
-		new StreamManager(g, f, stream).start();
-		new StreamManager(g, f2, stream).start();
+		//new StreamManager(g, f, stream).start();
+		//new StreamManager(g, f2, stream).start();
         /*for demo only*/
 		
         while (listening)

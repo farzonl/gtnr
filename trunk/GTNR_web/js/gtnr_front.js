@@ -105,19 +105,19 @@ function ret_update_from_server(data) {
 
 function generate_stats() {
 	var html = '<table border="1" cellspacing="0px" cellpadding="25px"><tr><td><pre>\n'+
-	'Battery SOC         = '+power.soc+'% \n'+
-	'Battery V           = '+power.v_bat+' V\n'+
-	'Solar Panel V       = '+power.v_panel+' V\n'+
-	'Battery Current     = '+power.c_bat+' A\n'+
-	'Solar Panel Current = '+power.c_panel+' A\n'+
-	'Total Power         = '+power.w+' W \n'+
+	'Battery SOC         = '+power.soc.toFixed(2)+'% \n'+
+	'Battery V           = '+power.v_bat.toFixed(2)+' V\n'+
+	'Solar Panel V       = '+power.v_panel.toFixed(2)+' V\n'+
+	'Battery Current     = '+power.c_bat.toFixed(2)+' A\n'+
+	'Solar Panel Current = '+power.c_panel.toFixed(2)+' A\n'+
+	'Total Power         = '+power.w.toFixed(2)+' W \n'+
 	'</pre></td><td><pre>\n'+
-	'Cpu 1  = '+atom.cpu[0]+'%\n'+ 
-	'Cpu 2  = '+atom.cpu[1]+'%\n'+
-	'Memory = '+atom.mem+'%\n'+
-	'Program Alive Time = '+atom.alive+'%\n'+ 
-	'Program Sleep Time = '+atom.sleep+'%\n'+ 
-	'IO Wait Time = '+atom.io+'%\n'+
+	'Cpu 1  = '+atom.cpu[0].toFixed(2)+'%\n'+ 
+	'Cpu 2  = '+atom.cpu[1].toFixed(2)+'%\n'+
+	'Memory = '+atom.mem.toFixed(2)+'%\n'+
+	'Program Alive Time = '+atom.alive.toFixed(2)+'%\n'+ 
+	'Program Sleep Time = '+atom.sleep.toFixed(2)+'%\n'+ 
+	'IO Wait Time = '+atom.io.toFixed(2)+'%\n'+
 	'</pre></td></tr></table>';
 	$('#analog_stats').html(html);
 }

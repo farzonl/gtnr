@@ -21,6 +21,7 @@ public class StreamManager extends Thread {
 	public void run() {
 		while (true) {
 			try {
+				// Java Visualizer
 				g.clear();
 				g.addAll(lss.getDistances());
 				

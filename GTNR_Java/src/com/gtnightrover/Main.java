@@ -1,6 +1,10 @@
 package com.gtnightrover;
 
+import com.gtnightrover.dfrduino.Atom;
+import com.gtnightrover.dfrduino.BatteryController;
 import com.gtnightrover.dfrduino.Lidar;
+import com.gtnightrover.dfrduino.MotorController;
+import com.gtnightrover.dfrduino.ServerManager;
 import com.gtnightrover.lidar.LidarComm;
 import com.gtnightrover.lidar.LidarSerialStream;
 import com.gtnightrover.visualizer.Graph;
@@ -31,32 +35,60 @@ public class Main {
 	 * @throws Exception 
 	 */
 	public static void main(String[] args) throws Exception {
-		// Set up GUI
-		Graph g = new Graph(800,600,-12000,-12000,12000,12000);
-		GraphWindow f = new GraphWindow(800, 600, g);
-		f.setVisible(true);
+		boolean gui = false;
 		
-		// Declare and initialize serial communication with lidar driver. This
-		// is required to optimize lidar speed.
-		/* FIXME: 
-		LidarComm dfr = new LidarComm("/dev/ttyUSB0", 9600);
-		/**/
-		LidarComm dfr = null;
-		
-		// Declare and initialize serial communication with lidar module.
-		// Note the LidarComm object being passed in. It is optional, but required
-		// for speed control.
-		/* FIXME:
-		LidarSerialStream lss = new LidarSerialStream("/dev/ttyACM0", 115200, dfr);
-		/**/
-		LidarSerialStream lss = new LidarSerialStream(null, 115200, dfr);
-		Lidar lidar = new Lidar(lss, true);
-		lss.start();
-		
-		// Create the thread which will automatically update the GUI with lidar data
-		StreamManager sm = new StreamManager(g, f, lidar);
-		sm.dfr = dfr;
-		sm.start();
+		if (gui) {
+			// Set up GUI
+			Graph g = new Graph(800,600,-12000,-12000,12000,12000);
+			GraphWindow f = new GraphWindow(800, 600, g);
+			f.setVisible(true);
+			
+			// Declare and initialize serial communication with lidar driver. This
+			// is required to optimize lidar speed.
+			/* FIXME: 
+			LidarComm dfr = new LidarComm("/dev/ttyUSB0", 9600);
+			/**/
+			LidarComm dfr = null;
+			
+			// Declare and initialize serial communication with lidar module.
+			// Note the LidarComm object being passed in. It is optional, but required
+			// for speed control.
+			/* FIXME:
+			LidarSerialStream lss = new LidarSerialStream("/dev/ttyACM0", 115200, dfr);
+			/**/
+			LidarSerialStream lss = new LidarSerialStream(null, 115200, dfr);
+			Lidar lidar = new Lidar(lss, true);
+			lss.start();
+			
+			// Create the thread which will automatically update the GUI with lidar data
+			StreamManager sm = new StreamManager(g, f, lidar);
+			sm.dfr = dfr;
+			sm.start();
+		} else {
+			// Declare and initialize serial communication with lidar driver. This
+			// is required to optimize lidar speed.
+			/* FIXME: 
+			LidarComm dfr = new LidarComm("/dev/ttyUSB0", 9600);
+			/**/
+			LidarComm dfr = null;
+			
+			// Declare and initialize serial communication with lidar module.
+			// Note the LidarComm object being passed in. It is optional, but required
+			// for speed control.
+			/* FIXME:
+			LidarSerialStream lss = new LidarSerialStream("/dev/ttyACM0", 115200, dfr);
+			/**/
+			LidarSerialStream lss = new LidarSerialStream(null, 115200, dfr);
+			Lidar lidar = new Lidar(lss, true);
+			lss.start();
+			
+			Atom atom = new Atom(true);
+			BatteryController bc = new BatteryController(dfr, true);
+			MotorController mc = new MotorController(dfr, true);
+			
+			ServerManager sm = new ServerManager(lidar, atom, bc, mc);
+			sm.start();
+		}
 	}
 
 }

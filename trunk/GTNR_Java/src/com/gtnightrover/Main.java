@@ -3,9 +3,9 @@ package com.gtnightrover;
 import com.gtnightrover.dfrduino.Atom;
 import com.gtnightrover.dfrduino.BatteryController;
 import com.gtnightrover.dfrduino.Lidar;
+import com.gtnightrover.dfrduino.SerialComm;
 import com.gtnightrover.dfrduino.MotorController;
 import com.gtnightrover.dfrduino.ServerManager;
-import com.gtnightrover.lidar.LidarComm;
 import com.gtnightrover.lidar.LidarSerialStream;
 import com.gtnightrover.visualizer.Graph;
 import com.gtnightrover.visualizer.GraphWindow;
@@ -48,7 +48,7 @@ public class Main {
 			/* FIXME: 
 			LidarComm dfr = new LidarComm("/dev/ttyUSB0", 9600);
 			/**/
-			LidarComm dfr = null;
+			SerialComm dfr = null;
 			
 			// Declare and initialize serial communication with lidar module.
 			// Note the LidarComm object being passed in. It is optional, but required
@@ -70,7 +70,7 @@ public class Main {
 			/* FIXME: 
 			LidarComm dfr = new LidarComm("/dev/ttyUSB0", 9600);
 			/**/
-			LidarComm dfr = null;
+			SerialComm dfr = null;
 			
 			// Declare and initialize serial communication with lidar module.
 			// Note the LidarComm object being passed in. It is optional, but required

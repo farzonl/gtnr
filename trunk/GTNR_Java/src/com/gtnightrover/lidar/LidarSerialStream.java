@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import com.gtnightrover.dfrduino.SerialComm;
 import com.gtnightrover.visualizer.Graph;
 
 public class LidarSerialStream extends Thread {
@@ -21,7 +22,7 @@ public class LidarSerialStream extends Thread {
 	private boolean TEST_DATA = true;
 	private long lastTime = System.currentTimeMillis();
 	private byte[] currSpeed = new byte[2];
-	private LidarComm driver;
+	private SerialComm driver;
 
 	public LidarSerialStream(String usbPort, int speed) throws Exception {
 		super(usbPort + ":" + speed);
@@ -38,7 +39,7 @@ public class LidarSerialStream extends Thread {
 		distances = new int[360];
 	}
 
-	public LidarSerialStream(String usbPort, int speed, LidarComm driver) throws Exception {
+	public LidarSerialStream(String usbPort, int speed, SerialComm driver) throws Exception {
 		super(usbPort + ":" + speed);
 		if (usbPort != null) {
 			CommPortIdentifier portId = CommPortIdentifier

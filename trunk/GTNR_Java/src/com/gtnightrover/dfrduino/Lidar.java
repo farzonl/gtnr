@@ -32,12 +32,14 @@ public class Lidar {
 		return lss.getWeightedMaximalPoint();
 	}
 	
-	public void log(int[] arr ) {
+	public boolean log(int[] arr ) {
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter("/home/david/EclipseProjects/GTNR/GTNR_web/log/dist.log", false));			
 			for(int i : arr)
 				bw.append(i+"\n");
 			bw.close();
+			return true;
 		} catch (IOException e) { /* Do nothing */ }
+		return false;
 	}
 }

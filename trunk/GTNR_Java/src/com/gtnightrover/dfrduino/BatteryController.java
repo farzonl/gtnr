@@ -4,7 +4,6 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import com.gtnightrover.lidar.LidarComm;
 
 public class BatteryController {
 	
@@ -18,7 +17,7 @@ public class BatteryController {
 	private double c_panel;
 	private double w;
 	private boolean autoLogging;
-	private LidarComm serial;
+	private SerialComm serial;
 
 	public double getSoc() {
 		return soc;
@@ -44,11 +43,11 @@ public class BatteryController {
 		return w;
 	}
 
-	public BatteryController(LidarComm lc) {
+	public BatteryController(SerialComm lc) {
 		this(lc, false);
 	}
 
-	public BatteryController(LidarComm lc, boolean autoLogging) {
+	public BatteryController(SerialComm lc, boolean autoLogging) {
 		serial = lc;
 		this.autoLogging = autoLogging;
 	}

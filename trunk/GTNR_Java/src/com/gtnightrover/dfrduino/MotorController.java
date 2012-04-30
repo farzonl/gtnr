@@ -4,7 +4,6 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import com.gtnightrover.lidar.LidarComm;
 
 public class MotorController {
 	
@@ -13,7 +12,7 @@ public class MotorController {
 
 	private int[] ir;
 	private int[] photocells;
-	private LidarComm serial;
+	private SerialComm serial;
 	private boolean autoLogging;
 	
 	public int[] getIR() {
@@ -30,11 +29,11 @@ public class MotorController {
 		return arr;
 	}
 
-	public MotorController(LidarComm lc) {
+	public MotorController(SerialComm lc) {
 		this(lc, false);
 	}
 
-	public MotorController(LidarComm lc, boolean autoLogging) {
+	public MotorController(SerialComm lc, boolean autoLogging) {
 		serial = lc;
 		ir = new int[2];
 		photocells = new int[4];

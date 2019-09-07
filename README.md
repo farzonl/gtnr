@@ -1,6 +1,6 @@
 # The Repo of the Georgia Tech Night Rover Project
-![](https://raw.githubusercontent.com/farzonl/gtnr/master/Documentation/SharedImages/IMAG1715.jpg =250x250)
-![](https://raw.githubusercontent.com/farzonl/gtnr/master/Documentation/SharedImages/IMAG1690.jpg =250x250)
+![](https://raw.githubusercontent.com/farzonl/gtnr/master/Documentation/SharedImages/IMAG1715.jpg)
+![](https://raw.githubusercontent.com/farzonl/gtnr/master/Documentation/SharedImages/IMAG1690.jpg)
 
 ## Proposal:
 <object data="https://raw.githubusercontent.com/farzonl/gtnr/master/Documentation/Proposals/GT_NightRover-CornellCupApplication_v2.pdf" type="application/pdf" width="700px" height="700px">

@@ -1,0 +1,85 @@
+/**
+ *         //=========================\\
+ *         ||                         ||
+ *         ||  GTNR Motor Controller  ||
+ *         ||                         ||
+ *         \\=========================//
+ *
+ *
+ *
+ *   Status:
+ *   -------
+ *      Compiles. Sensor acquisition code tested and functional. Pending 
+ *      functionality testing.
+ *
+ *
+ *
+ *   Functionality Summary:
+ *   ----------------------
+ *
+ *
+ *
+ *
+ *   Current Questions/Issues:
+ *   -------------------------
+ *     1) How to handle extreme IR sensors? Send Atom Board interrupt or wait for
+ *          further guidence. What if Lidar doesn't see obstacle, deadlock?
+ *
+ *     2) How to calculate degrees for turning? 
+ *
+ *     3) How to keep track of distance/time for motion/STOP? Total distance? Keep
+ *          monitoring sensors while stopped, no need here right?
+ *
+ *
+ *
+ *   Expected Request Format:
+ *   ------------------------
+ *     0. Sync byte       {  0xFF, 0xFF, 0xFF, 0xFF }
+ *     1. Command byte    {   REQ,   M*,   R*, STOP }
+ *     2. Data high byte  {   N/A,  mmH, degH, timH }
+ *     3. Data low byte   {   N/A,  mmL, degL, timL }
+ *     4. Data2           { REQID,  SPD,  SPD,  N/A }
+ *
+ *          *NOTE: M* = { FWD, REV }, 
+ *                 R* = { LFT, RHT }
+ *
+ *
+ *
+ *   Response Format:
+ *   ----------------
+ *     0. Sync byte                 (0xFF or -1)
+ *     1. Request ID                (send as com->data2 or last byte of command)
+ *     2. Photocell 0: Front Right  (8 bit analog)
+ *     3. Photocell 1: Front Left   (8 bit analog)
+ *     4. Photocell 2: Back Right   (8 bit analog)
+ *     5. Photocell 3: Back Left    (8 bit analog)
+ *     6. IR Right                  (mm)
+ *     7. IR Left                   (mm)
+ *
+ *
+ *
+ *   Arduino Pin Assignments:
+ *   ------------------------
+ *     0 - Rx Atomboard (USB)
+ *     1 - Tx Atomboard (USB)
+ *     2 - Rx Battery Controller
+ *     3 - Tx Battery Controller
+ *     4 - M1 Direction Control
+ *     5 - M1 Speed Control
+ *     6 - M2 Speed Control
+ *     7 - M1 Direction Control
+ *     8 - Right Encoder A
+ *     9 - Right Encoder B
+ *    10 - Left Encoder A
+ *    11 - Left Encoder B
+ *    12 - 
+ *    13 - Status LED
+ *    A0 - Photocell0
+ *    A1 - Photocell1
+ *    A2 - Photocell2
+ *    A3 - Photocell3
+ *    A4 - IR0
+ *    A5 - IR1
+ *    A6 - 
+ *    A7 - 
+ */

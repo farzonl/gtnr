@@ -1,0 +1,85 @@
+/**
+ *         //===========================\\
+ *         ||                           ||
+ *         ||  GTNR Battery Controller  ||
+ *         ||                           ||
+ *         \\===========================//
+ *
+ *
+ *
+ *   Status:
+ *   -------
+ *      Compiles. Sensor acquisition code tested and functional. Pending 
+ *      functionality testing.
+ *
+ *
+ *
+ *   Function Summary:
+ *   -----------------
+ *
+ *
+ *
+ *   Current Questions/Issues:
+ *   -------------------------
+ *     1) Should the lidar motor voltage be monitored? No analog 
+ *          pins left, ADC?
+ *
+ *     2) Implement logging feature? i.e. Save a history of values 
+ *          for greater logging resolution.
+ *
+ *     3) Implement ability for battery controller to cut power to
+ *          specific devices using too much current. Automatically
+ *          or by request from Atom Board.
+ *
+ *     4) How to handle extreme values for temperature or current.
+ *
+ *
+ *
+ *   Expected Request Format:
+ *   ------------------------
+ *     0. Sync byte       {  0xFF,   0xFF, 0xFF }
+ *     1. Command byte    {   REQ,    OFF,  LOG }
+ *     2. Data high byte  {   N/A,    N/A,  N/A }
+ *     3. Data low byte   {   N/A,    N/A,  N/A }
+ *     4. Data2           { REQID, DEV_ID,  N/A }
+ *
+ *
+ *
+ *   Response Format:
+ *   ----------------
+ *     0. Sync byte                (0xFF or -1)
+ *     1. Request ID               (send as com->data2 or last byte of command)
+ *     2. Current 5V               (mA)
+ *     3. Current 12V              (mA)
+ *     4. Current Motors           (mA)
+ *     5. Temperature Body         (deg F)
+ *     6. Temperature Atom Board   (deg F)
+ *     7. Temperature Battery      (deg F)
+ *
+ *
+ *
+ *   Arduino Pin Assignments:
+ *   ------------------------
+ *     0 - Rx Motor Controller
+ *     1 - Tx Motor Controller
+ *     2 - 
+ *     3 - 
+ *     4 - M1 Direction Control
+ *     5 - M1 Speed Control
+ *     6 - 
+ *     7 - 
+ *     8 - 
+ *     9 - 
+ *    10 - 
+ *    11 - 
+ *    12 - 
+ *    13 - Status LED
+ *    A0 - Current 5V
+ *    A1 - Current 12V
+ *    A2 - Current Motors
+ *    A3 - Termperature Body
+ *    A4 - Termperature Atom Board
+ *    A5 - Termperature Battery
+ *    A6 - 
+ *    A7 - 
+ */
